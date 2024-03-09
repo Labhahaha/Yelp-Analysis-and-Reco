@@ -4,3 +4,5 @@ pyspark-stubs==2.4.0-post9
 numpy==1.16.6
 flask==2.2.5
 flask-cors==4.0.0
+pymysql==1.1.0
+flask-sqlalchemy==3.0.5

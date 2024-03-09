@@ -1,7 +1,7 @@
 # coding:utf-8
 from src.backend.DataAnalyse.SparkSessionBase import SparkSessionBase
 from pyspark import HiveContext
-
+from . import business_blue
 
 class Business(SparkSessionBase):
     SPARK_URL = "local"
@@ -15,6 +15,7 @@ class Business(SparkSessionBase):
         self.business_table = self.hc.table('business')
 
     #找出美国最常见商户（前n）
+    @business_blue.route('/search_most_business')
     def search_most_business(self,num=20):
         sql = f"SELECT name, COUNT(name) as name_count FROM business GROUP BY name ORDER BY name_count DESC LIMIT {num}"
         res= self.hc.sql(sql)
@@ -33,9 +34,9 @@ class Business(SparkSessionBase):
         return res
 
     #找出美国最常见商户并显示平均评分
-    def search_most_state(self,num=20):
+    def search_most_star(self,num=20):
         sql = f"SELECT name, AVG(stars) as avg_stars FROM business GROUP BY name ORDER BY COUNT(name) DESC LIMIT {num}"
-        res= self.hc.sql(sql)
+        res = self.hc.sql(sql)
         return res
 
     # 关闭spark会话连接
