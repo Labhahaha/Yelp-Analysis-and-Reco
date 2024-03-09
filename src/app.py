@@ -1,7 +1,7 @@
 # coding:utf-8
 # 引入 Flask 类
 from flask import Flask
-from TextRandJob import TextRandJob
+from src.DataAnalyse.TextRandJob import TextRandJob
 
 # 实例化一个 Flask 对象
 app = Flask(__name__)

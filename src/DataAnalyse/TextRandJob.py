@@ -1,4 +1,4 @@
-from SparkSessionBase import SparkSessionBase
+from src.DataAnalyse.SparkSessionBase import SparkSessionBase
 
 
 class TextRandJob(SparkSessionBase):
