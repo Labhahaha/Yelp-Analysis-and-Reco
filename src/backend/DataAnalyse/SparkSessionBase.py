@@ -19,10 +19,10 @@ class SparkSessionBase:
             os.environ['HADOOP_HOME'] = 'D:\\hadoop-2.7.7'
 
         if not os.environ.get('HADOOP_CONF_DIR'):
-            os.environ['HADOOP_CONF_DIR'] = 'hadoop-conf'
+            os.environ['HADOOP_CONF_DIR'] = 'config/hadoop-conf'
 
         if not os.environ.get('YARN_CONF_DIR'):
-            os.environ['YARN_CONF_DIR'] = 'yarn-conf'
+            os.environ['YARN_CONF_DIR'] = 'config/yarn-conf'
         os.environ["HADOOP_USER_NAME"] = "asdf"
         conf = SparkConf()
         settings = (

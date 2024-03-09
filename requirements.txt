@@ -3,3 +3,4 @@ pyspark==2.4.8
 pyspark-stubs==2.4.0-post9
 numpy==1.16.6
 flask==2.2.5
+flask-cors==4.0.0
