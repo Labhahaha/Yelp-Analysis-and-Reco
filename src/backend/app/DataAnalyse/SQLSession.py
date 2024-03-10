@@ -1,11 +1,13 @@
+from contextlib import contextmanager
+
 import pandas as pd
 from flask import jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from contextlib import contextmanager
 
 engine = None
 Session = None
+
 
 def db_init(db_url):
     global engine, Session
@@ -14,6 +16,7 @@ def db_init(db_url):
         engine = create_engine(db_url)
         # 创建会话工厂
         Session = sessionmaker(bind=engine)
+
 
 @contextmanager
 def get_session():
@@ -25,10 +28,12 @@ def get_session():
     finally:
         session.close()
 
+
 def toJSON(res):
     res = [row._asdict() for row in res]
     json_res = jsonify(res)
     return json_res
+
 
 def ToDataFrame(res):
     data = [dict(row) for row in res]

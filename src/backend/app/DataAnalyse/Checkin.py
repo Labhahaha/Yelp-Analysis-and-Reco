@@ -1,8 +1,10 @@
 from flask import Blueprint
 from sqlalchemy import text
-from .SQLSession import get_session,toJSON,ToDataFrame
+
+from .SQLSession import get_session, toJSON
+
 # 创建蓝图
-checkin_blue= Blueprint('checkin', __name__,)
+checkin_blue = Blueprint('checkin', __name__, )
 
 
 # 统计每年的打卡次数
@@ -43,4 +45,3 @@ def business_order_by_checkin_count():
         res = session.execute(query)
         json_res = toJSON(res)
         return json_res
-
