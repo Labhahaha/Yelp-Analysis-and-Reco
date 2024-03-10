@@ -1,9 +1,5 @@
-from flask import Blueprint
+from .Business import business_blue
+from .SQLSession import db_init
 
-#创建蓝图
-business = Blueprint('business', __name__)
-
-#先创建蓝图，再导入功能类，避免循环导入
-from . import Business
 
 

@@ -1,2 +1,4 @@
-DATABASE_URL = 'mysql+pymysql://root:147258369@localhost:3306/demo'
+# 数据库连接配置
+DATABASE_URL = 'mysql+pymysql://root:123456@172.16.0.247:3306/yelp'
 TRACK_MODIFICATIONS = False
+
