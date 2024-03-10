@@ -1,10 +1,9 @@
-from flask import Blueprint
 from sqlalchemy import text
 from .SQLSession import get_session,toJSON,ToDataFrame
+from . import business
 
-business_blue = Blueprint('business', __name__, url_prefix='/business')
 #找出美国最常见商户（前n）
-@business_blue.route('/search_most_business')
+@business.route('/search_most_business')
 def search_most_business():
     with get_session() as session:
         query = text("SELECT * FROM person where age=19")
