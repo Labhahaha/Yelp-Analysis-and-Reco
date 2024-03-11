@@ -20,25 +20,27 @@ def filter_by_distance(filter_condition, user_location):
         query = text(f"select * from business limit 200")
         global_df = session.execute(query)
         global_df = toDataFrame(global_df)
+    distance = global_df.apply(lambda row: cal_distance(user_location, [row['longitude'], row['latitude']]), axis=1)
+    filter_df = global_df.assign(distance=distance)
+    # print(filter_df)
     # 不足1km
     if filter_condition == "(0,1)":
-        filter_df = global_df[0 <= cal_distance(user_location, \
-                    [global_df["longitude"], global_df["latitude"]]) < 1]
+        filter_df = filter_df[(filter_df["distance"] >= 0) & (filter_df["distance"] < 1)]
+
 
     # 1~2km
     elif filter_condition == "(1,2)":
-        filter_df = global_df[1 <= cal_distance(user_location, \
-                    [global_df["longitude"], global_df["latitude"]]) < 2]
+        filter_df = filter_df[(filter_df["distance"] >= 1) & (filter_df["distance"] < 2)]
+
 
     # 2~5km
     elif filter_condition == "(2,5)":
-        filter_df = global_df[2 <= cal_distance(user_location, \
-                    [global_df["longitude"], global_df["latitude"]]) < 5]
+        filter_df = filter_df[(filter_df["distance"] >= 2) & (filter_df["distance"] < 5)]
 
     # 超过5km
     elif filter_condition == "(5,n)":
-        filter_df = global_df[cal_distance(user_location, \
-                    [global_df["longitude"], global_df["latitude"]]) >= 5]
+        filter_df = filter_df[filter_df["distance"] >=5]
+
 
     # 非法输入
     else:
