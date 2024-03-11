@@ -1,1 +1,1 @@
-from .get_distance import get_distance
+from .get_distance import cal_distance

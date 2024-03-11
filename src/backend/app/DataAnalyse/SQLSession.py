@@ -35,7 +35,7 @@ def toJSON(res):
     return json_res
 
 
-def ToDataFrame(res):
-    data = [dict(row) for row in res]
+def toDataFrame(res):
+    data = [row._asdict() for row in res]
     df = pd.DataFrame(data)
     return df

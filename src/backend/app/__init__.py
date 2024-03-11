@@ -18,7 +18,6 @@ def create_app(config):
     app.register_blueprint(comprehensive_blue, url_prefix='/comprehensive')
     app.register_blueprint(recommend_blue, url_prefix='/recommend')
     app.register_blueprint(business_details_blue, url_prefix='/business')
-    print(app.url_map)
     return app
 
 

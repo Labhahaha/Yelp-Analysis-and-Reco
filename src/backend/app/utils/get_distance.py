@@ -6,7 +6,7 @@ from sqlalchemy import text
 from ..DataAnalyse.SQLSession import get_session
 
 
-def get_distance_fromSQL(user_location,business_id):
+def cal_distance_fromSQL(user_location,business_id):
     # 获取用户的经纬度
     user_longitude = user_location[0]
     user_latitude = user_location[1]
@@ -23,7 +23,7 @@ def get_distance_fromSQL(user_location,business_id):
 
     return haversine(user_longitude, user_latitude, business_longitude, business_latitude)
 
-def get_distance(user_location,business_location):
+def cal_distance(user_location,business_location):
     # 获取用户的经纬度
     user_longitude = user_location[0]
     user_latitude = user_location[1]
