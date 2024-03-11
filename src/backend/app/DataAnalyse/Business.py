@@ -1,4 +1,6 @@
-from flask import Blueprint
+import json
+
+from flask import Blueprint, jsonify
 from sqlalchemy import text
 
 from .SQLSession import get_session, toJSON
