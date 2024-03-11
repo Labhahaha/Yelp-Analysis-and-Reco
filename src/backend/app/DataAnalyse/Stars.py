@@ -1,9 +1,10 @@
-
 from flask import Blueprint
 from sqlalchemy import text
-from .SQLSession import get_session, toJSON, ToDataFrame
+
+from .SQLSession import get_session, toJSON
+
 # 创建蓝图
-stars_blue= Blueprint('stars', __name__,)
+stars_blue = Blueprint('stars', __name__, )
 
 
 # 统计评分的分布情况
@@ -34,7 +35,3 @@ def business_with_most_5stars():
         res = session.execute(query)
         json_res = toJSON(res)
         return json_res
-
-
-
-
