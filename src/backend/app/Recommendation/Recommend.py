@@ -3,28 +3,32 @@ from flask import Blueprint, request, json, jsonify
 from sqlalchemy import text
 from ..DataAnalyse.SQLSession import get_session, toDataFrame
 from ..utils.get_distance import cal_distance
-
+from .CollaborativeFiltering import CollaborativeFiltering
 recommend_blue = Blueprint('recommend_blue', __name__)
 
 business_df = None
 review_df = None
+city = None
 
 @recommend_blue.route('/recommend')
 def get_recommendations():
-    global business_df,review_df
+    global business_df,review_df,city
     # 获取推荐所需参数
     user_location = json.loads(request.args.get('user_location'))
     user_id = request.args.get('user_id')
-    city = request.args.get('city')
     query = request.args.get('query')
-    # 初始化该城市dataframe信息
-    if business_df is None:
+    res = request.args.get('city')
+    print(res != city)
+    if (city is None) or (res != city):
+        # 初始化该城市dataframe信息
+        city = res
         business_df = get_business_by_city(city)
-    if review_df is None:
         review_df = get_review_by_business(tuple(business_df['business_id'].values))
 
     #协同过滤算法候选集
-    candidate_set1 = get_collaborative_filtering_candidate_set(user_id,business_df['business_id'])
+    candidate_set1 = get_collaborative_filtering_candidate_set(user_id, business_df,20)
+    print(candidate_set1)
+
     #基于位置的候选集
     candidate_set2 = get_location_based_candidate_set(user_location)
     #基于查询的候选集
@@ -44,8 +48,11 @@ def get_recommendations():
     return business_df.to_json(orient='records')
 
 
-def get_collaborative_filtering_candidate_set(user_id, business_ids):
-    pass
+def get_collaborative_filtering_candidate_set(user_id, business_df,k):
+    rating_list = CollaborativeFiltering(user_id, pd.DataFrame(business_df['business_id']))
+    rating_list = pd.merge(business_df, rating_list, left_on='business_id', right_on='business_id')
+    top_k_recommendations = rating_list.sort_values(by='rating', ascending=False).head(k)
+    return top_k_recommendations[['business_id','name','rating']]
 
 def get_location_based_candidate_set(user_location):
     pass
@@ -65,7 +72,7 @@ def add_Info(recommend_list):
 
 def get_business_by_city(city):
     with get_session() as session:
-        query = text(f"select * from business where city = '{city}'")
+        query = text(f"select * from business where city like '%{city}%'")
         res = session.execute(query)
         res = toDataFrame(res)
         return res
