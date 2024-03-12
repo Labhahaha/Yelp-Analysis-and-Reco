@@ -1,3 +1,4 @@
+#coding=utf-8
 from math import radians, cos, sin, asin, sqrt
 
 from sqlalchemy import text
@@ -6,7 +7,7 @@ from ..DataAnalyse.SQLSession import get_session
 
 
 def cal_distance_fromSQL(user_location,business_id):
-    # »ñÈ¡ÓÃ»§µÄ¾­Î³¶È
+    # è·å–ç”¨æˆ·çš„ç»çº¬åº¦
     user_longitude = user_location[0]
     user_latitude = user_location[1]
 
@@ -23,7 +24,7 @@ def cal_distance_fromSQL(user_location,business_id):
     return haversine(user_longitude, user_latitude, business_longitude, business_latitude)
 
 def cal_distance(user_location,business_location):
-    # »ñÈ¡ÓÃ»§µÄ¾­Î³¶È
+    # è·å–ç”¨æˆ·çš„ç»çº¬åº¦
     user_longitude = user_location[0]
     user_latitude = user_location[1]
     business_longitude = business_location[0]
@@ -33,21 +34,21 @@ def cal_distance(user_location,business_location):
 
 def haversine(lon1, lat1, lon2, lat2):
     """
-    ¼ÆËãÁ½¸ö¾­Î³¶È×ø±êÖ®¼äµÄÊµ¼Ê¾àÀë£¨µ¥Î»£ºÃ×£©
+    è®¡ç®—ä¸¤ä¸ªç»çº¬åº¦åæ ‡ä¹‹é—´çš„å®é™…è·ç¦»ï¼ˆå•ä½ï¼šç±³ï¼‰
 
-    :param lon1: µÚÒ»¸öµãµÄ¾­¶È£¨µ¥Î»£º¶È£©
-    :param lat1: µÚÒ»¸öµãµÄÎ³¶È£¨µ¥Î»£º¶È£©
-    :param lon2: µÚ¶ş¸öµãµÄ¾­¶È£¨µ¥Î»£º¶È£©
-    :param lat2: µÚ¶ş¸öµãµÄÎ³¶È£¨µ¥Î»£º¶È£©
-    :return: Á½µãÖ®¼äµÄÊµ¼Ê¾àÀë£¨µ¥Î»£ºÃ×£©
+    :param lon1: ç¬¬ä¸€ä¸ªç‚¹çš„ç»åº¦ï¼ˆå•ä½ï¼šåº¦ï¼‰
+    :param lat1: ç¬¬ä¸€ä¸ªç‚¹çš„çº¬åº¦ï¼ˆå•ä½ï¼šåº¦ï¼‰
+    :param lon2: ç¬¬äºŒä¸ªç‚¹çš„ç»åº¦ï¼ˆå•ä½ï¼šåº¦ï¼‰
+    :param lat2: ç¬¬äºŒä¸ªç‚¹çš„çº¬åº¦ï¼ˆå•ä½ï¼šåº¦ï¼‰
+    :return: ä¸¤ç‚¹ä¹‹é—´çš„å®é™…è·ç¦»ï¼ˆå•ä½ï¼šç±³ï¼‰
     """
-    # ½«Ê®½øÖÆ¶ÈÊı×ª»»Îª»¡¶È
+    # å°†åè¿›åˆ¶åº¦æ•°è½¬æ¢ä¸ºå¼§åº¦
     lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
 
-    # haversine¹«Ê½
+    # haversineå…¬å¼
     dlon = lon2 - lon1
     dlat = lat2 - lat1
     a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
     c = 2 * asin(sqrt(a))
-    r = 6371  # µØÇòÆ½¾ù°ë¾¶£¨µ¥Î»£ºÇ§Ã×£©
-    return c * r * 1000  # ×ª»»ÎªÃ×
+    r = 6371  # åœ°çƒå¹³å‡åŠå¾„ï¼ˆå•ä½ï¼šåƒç±³ï¼‰
+    return c * r * 1000  # è½¬æ¢ä¸ºç±³

@@ -1,4 +1,3 @@
-#coding=gbk
 import pandas as pd
 from flask import Blueprint, request, json, jsonify
 from sqlalchemy import text
