@@ -5,7 +5,6 @@ from surprise import Dataset, dump
 from surprise import Reader
 from surprise import SVD
 from surprise.model_selection import train_test_split
-
 model_path = 'config/model/filter_model.pkl'
 model = dump.load(model_path)[1]
 reader = Reader(rating_scale=(1, 5))
@@ -45,7 +44,6 @@ def model_test():
     print(predictions)
 
 def CollaborativeFiltering(user_id, business_ids):
-    print(type(business_ids))
     business_ids['user_id'] = user_id
     business_ids['true_rating'] = 1
     data = business_ids
@@ -70,6 +68,6 @@ def toDataFrame(predictions):
     df_predictions = pd.DataFrame(prediction_list)
     return df_predictions
 
-if __name__ == '__main__':
-    model_test()
+
+
 
