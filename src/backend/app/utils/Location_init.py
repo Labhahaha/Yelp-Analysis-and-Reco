@@ -1,10 +1,10 @@
-#¸ù¾ÝÓÃ»§ËùÔÚ³ÇÊÐÈ¡Ò»¸ö¾«È·¾­Î³¶È
+
 def location_init(business_df):
 
-    random_row = business_df.sample(n=1)  # Ëæ»úÑ¡ÔñÒ»ÐÐ
+    random_row = business_df.sample(n=1)  # ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½Ò»ï¿½ï¿½
 
-    longitude = random_row['longitude'].values[0]  # »ñÈ¡¾­¶È
-    latitude = random_row['latitude'].values[0]  # »ñÈ¡Î³¶È
+    longitude = random_row['longitude'].values[0]  # ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½
+    latitude = random_row['latitude'].values[0]  # ï¿½ï¿½È¡Î³ï¿½ï¿½
 
     user_location = [longitude,latitude]
 

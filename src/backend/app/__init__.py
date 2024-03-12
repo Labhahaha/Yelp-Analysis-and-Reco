@@ -5,7 +5,6 @@ from .Recommendation import recommend_blue
 from .Search import search_blue
 from .Friends import friends_blue
 def create_app(config):
-    #ʵ����app
     app = Flask(__name__)
     CORS(app, supports_credentials=True)
 
@@ -19,9 +18,7 @@ def create_app(config):
     app.register_blueprint(recommend_blue, url_prefix='/recommend')
     app.register_blueprint(search_blue, url_prefix='/search')
     app.register_blueprint(friends_blue, url_prefix='/Friends')
-    print(app.url_map)
 
-    print(app.url_map)
     return app
 
 
