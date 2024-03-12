@@ -96,25 +96,7 @@ def checkin_count_by_year():
         json_res = toJSON(res)
         return json_res
 
-# 统计出每年的打卡数
-@users_blue.route('/info_by_year')
-def info_by_year():
-    with get_session() as session:
-        query = text("select * from info_by_year")
-        res = session.execute(query)
-        json_res = toJSON(res)
-        return json_res
-
-# 统计出每年的打卡数
-@users_blue.route('/info_by_year')
-def info_by_year():
-    with get_session() as session:
-        query = text("select * from info_by_year")
-        res = session.execute(query)
-        json_res = toJSON(res)
-        return json_res
-
-# 统计出每年的打卡数
+# 统计出每年的综合数据
 @users_blue.route('/info_by_year')
 def info_by_year():
     with get_session() as session:
