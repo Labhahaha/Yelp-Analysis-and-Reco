@@ -7,7 +7,6 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from datetime import datetime
 from src.backend.app.DataAnalyse.SQLSession import (get_session, toJSON, toDataFrame, db_init)
-import matplotlib.pyplot as plt
 from src.backend.config import config
 import pandas as pd
 from sklearn.impute import SimpleImputer
@@ -16,8 +15,6 @@ import pickle
 
 friends_blue = Blueprint('Friends', __name__)
 # 111
-
-
 
 
 @friends_blue.route("/")

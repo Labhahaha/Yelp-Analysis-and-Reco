@@ -44,29 +44,6 @@ def userClassification():
         dump(kmeans, f'kmeans_model{i}.joblib')
         print(i)
 
-
-
-    # 绘制肘部法则图
-    import matplotlib.pyplot as plt
-
-    plt.figure(figsize=(20, 16))
-    plt.plot(k_list, wcss)
-    plt.title('The Elbow Method')
-    plt.xlabel('Number of clusters')
-    plt.ylabel('WCSS')  # Within cluster sum of squares
-    plt.show()
-
-    # # 假设从图中我们决定 K 值为 5
-    # k_value = 5
-    #
-    # # 应用 K-Means 聚类
-    # kmeans = KMeans(n_clusters=k_value, init='k-means++', max_iter=300, n_init=10, random_state=0)
-    # df['cluster'] = kmeans.fit_predict(df[features])
-    #
-    # # 现在 df['cluster'] 包含了每个用户的聚类标签
-    # print(df[['user_id', 'cluster']])
-
-
 def calculate_accuracy(kmeans_model, df, X, sample_size=10):
     predictions = kmeans_model.predict(X)
     df['cluster'] = predictions
