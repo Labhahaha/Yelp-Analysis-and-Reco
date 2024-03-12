@@ -55,7 +55,7 @@ def get_location_based_candidate_set(user_location):
     pass
 
 def get_query_based_candidate_set(query,business_df,k):
-    business_texts = pd.DataFrame({'business_text': business_df['name'] + ' ' + business_df['categories']})
+    business_texts = pd.DataFrame({'business_text': "The name of this business is "+business_df['name'] + ' and its categories include ' + business_df['categories']})
     rating_list = match_rating(query, business_texts)
     rating_list = pd.concat([business_df, rating_list],axis=1)
     top_k_recommendations = rating_list.sort_values(by='match_rating', ascending=False).head(k)
