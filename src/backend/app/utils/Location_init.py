@@ -1,4 +1,3 @@
-#coding=gbk
 #根据用户所在城市取一个精确经纬度
 def location_init(business_df):
 
