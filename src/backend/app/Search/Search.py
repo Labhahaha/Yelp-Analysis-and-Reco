@@ -1,7 +1,7 @@
 # coding=gbk
 from flask import Blueprint, jsonify, json
 from flask import request
-from ..utils import cal_distance,location_init
+from ..utils import get_business_by_city, cal_distance,location_init
 from .Filter import filter
 
 # 创建蓝图
@@ -18,12 +18,11 @@ def search():
     if query is None:
         return jsonify({"error": "Missing query parameter"}), 400
 
-    from ..Recommendation.Recommend import business_df
-
     # 按城市获取商家数据
-    df = business_df
+    df = get_business_by_city('Abington')
 
-    user_location = location_init()
+    # 在当前城市获取用户位置数据
+    user_location = location_init(df)
 
     # 计算用户与每一个商家的距离，df中新增distance列
     df['distance'] = df.apply(lambda row: cal_distance(user_location, [row['longitude'], row['latitude']]), axis=1)
@@ -42,6 +41,7 @@ def search():
     if sortBy == 'review_count':
         # 按照评论数量从高到低排序
         df = df.sort_values(by='review_count', ascending=False)
+        print(df)
 
     if sortBy == 'distance':
         # 按照距离从近到远排序

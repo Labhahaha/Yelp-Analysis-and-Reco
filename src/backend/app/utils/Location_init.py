@@ -1,6 +1,6 @@
+#coding=gbk
 #根据用户所在城市取一个精确经纬度
-def location_init():
-    from ..Recommendation.Recommend import business_df
+def location_init(business_df):
 
     random_row = business_df.sample(n=1)  # 随机选择一行
 
