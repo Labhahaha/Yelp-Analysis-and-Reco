@@ -44,29 +44,6 @@ def userClassification():
         dump(kmeans, f'kmeans_model{i}.joblib')
         print(i)
 
-
-
-    # 绘制肘部法则图
-    import matplotlib.pyplot as plt
-
-    plt.figure(figsize=(20, 16))
-    plt.plot(k_list, wcss)
-    plt.title('The Elbow Method')
-    plt.xlabel('Number of clusters')
-    plt.ylabel('WCSS')  # Within cluster sum of squares
-    plt.show()
-
-    # # 假设从图中我们决定 K 值为 5
-    # k_value = 5
-    #
-    # # 应用 K-Means 聚类
-    # kmeans = KMeans(n_clusters=k_value, init='k-means++', max_iter=300, n_init=10, random_state=0)
-    # df['cluster'] = kmeans.fit_predict(df[features])
-    #
-    # # 现在 df['cluster'] 包含了每个用户的聚类标签
-    # print(df[['user_id', 'cluster']])
-
-
 def calculate_accuracy(kmeans_model, df, X, sample_size=10):
     predictions = kmeans_model.predict(X)
     df['cluster'] = predictions
@@ -154,13 +131,6 @@ def recommend_friends(user_id, clustered_users, n_recommendations=10):
     return np.random.choice(possible_friends, num_recommendations, replace=False).tolist()
 
     # 假设有一个用户的ID是user_id_to_recommend
-    user_id_to_recommend = user_ids[0]  # 举例来说，我们取第一个用户的ID
-
-    # 获取推荐的好友列表
-    recommended_friend_ids = recommend_friends(user_id_to_recommend, clustered_users, n_recommendations=10)
-
-    # 打印推荐的好友用户ID
-    print("Recommended Friends for User ID", user_id_to_recommend, ":", recommended_friend_ids)
 
 db_init(config.DATABASE_URL)
 with get_session() as session:

@@ -1,12 +1,10 @@
-#coding = gbk
 from flask import Flask
 from flask_cors import CORS
 from .DataAnalyse import business_blue,users_blue,checkin_blue,comprehensive_blue,stars_blue,db_init
 from .Recommendation import recommend_blue
 from .Search import search_blue
-from .friends import friends_blue
+from .Friends import friends_blue
 def create_app(config):
-    #ʵ����app
     app = Flask(__name__)
     CORS(app, supports_credentials=True)
 
@@ -19,10 +17,8 @@ def create_app(config):
     app.register_blueprint(comprehensive_blue, url_prefix='/comprehensive')
     app.register_blueprint(recommend_blue, url_prefix='/recommend')
     app.register_blueprint(search_blue, url_prefix='/search')
-    app.register_blueprint(friends_blue, url_prefix='/friends')
-    print(app.url_map)
+    app.register_blueprint(friends_blue, url_prefix='/Friends')
 
-    print(app.url_map)
     return app
 
 
