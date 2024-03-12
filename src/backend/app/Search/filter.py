@@ -1,6 +1,8 @@
 # coding=gbk
+
 from flask import Blueprint, jsonify, json
 from flask import request
+from numpy.core.defchararray import isdigit
 from sqlalchemy import text
 from ..utils.get_distance import cal_distance
 
@@ -17,34 +19,23 @@ global_df = None
 def filter_by_distance(filter_condition, user_location):
     global global_df
     with get_session() as session:
-        query = text(f"select * from business limit 200")
+        query = text(f"select * from business where city = 'Affton' ")
         global_df = session.execute(query)
         global_df = toDataFrame(global_df)
-    distance = global_df.apply(lambda row: cal_distance(user_location, [row['longitude'], row['latitude']]), axis=1)
+    distance = global_df.apply(
+                    lambda row: cal_distance(user_location, [row['longitude'], row['latitude']]) / 1000, axis=1)
+    print(distance)
     filter_df = global_df.assign(distance=distance)
-    # print(filter_df)
-    # 不足1km
-    if filter_condition == "(0,1)":
-        filter_df = filter_df[(filter_df["distance"] >= 0) & (filter_df["distance"] < 1)]
 
+    low = filter_condition[0]
+    high = filter_condition[1]
 
-    # 1~2km
-    elif filter_condition == "(1,2)":
-        filter_df = filter_df[(filter_df["distance"] >= 1) & (filter_df["distance"] < 2)]
+    if isdigit(str(low)) and isdigit(str(high)):
+        filter_df = filter_df[(filter_df["distance"] >= low) &
+                              (filter_df["distance"] < high)]
 
-
-    # 2~5km
-    elif filter_condition == "(2,5)":
-        filter_df = filter_df[(filter_df["distance"] >= 2) & (filter_df["distance"] < 5)]
-
-    # 超过5km
-    elif filter_condition == "(5,n)":
-        filter_df = filter_df[filter_df["distance"] >=5]
-
-
-    # 非法输入
     else:
-        filter_df = None
+        filter_df_ = None
 
     return filter_df
 
@@ -64,10 +55,6 @@ def filter_by_stars(filter_condition):
     elif filter_condition == "more_than_four_stars":
         filter_df = global_df[global_df["stars"] >= 4]
 
-    # 三星及以上商家
-    elif filter_condition == "more_than_three_stars":
-        filter_df = global_df[global_df["stars"] >= 3]
-
     # 非法输入
     else:
         filter_df = None
@@ -79,18 +66,21 @@ def filter_by_stars(filter_condition):
 def myfilter():
     user_location = json.loads(request.args.get("user_location"))
     filter_type = request.args.get("filter_type")
-    filter_condition = request.args.get("filter_condition")
+    filter_condition = json.loads(request.args.get("filter_condition"))
 
-    result_df = None
+    result = None
     if filter_type == "distance":
-        result_df = filter_by_distance(filter_condition, user_location)
+        result = filter_by_distance(filter_condition, user_location)
     elif filter_type == "stars":
-        result_df = filter_by_stars(filter_condition)
+        result = filter_by_stars(filter_condition)
     elif filter_type == "facilities":
         pass
     else:
-        pass
+        return None
+
+    if result is None:
+        return result
     # return jsonify(result_df), 200
     # result_df["business_id"].show(truncate=False)
-    return result_df.to_json(orient='records')
+    return result.to_json(orient='records')
 
