@@ -1,4 +1,3 @@
-#coding=gbk
 from math import radians, cos, sin, asin, sqrt
 
 from sqlalchemy import text

@@ -1,2 +1,2 @@
-from .friends import friends_blue
+from .FriendsRecommend import friends_blue
 

@@ -1,4 +1,3 @@
-# coding=gbk
 from flask import Blueprint, jsonify, json
 from flask import request
 from ..utils import get_business_by_city, cal_distance,location_init

@@ -154,13 +154,6 @@ def recommend_friends(user_id, clustered_users, n_recommendations=10):
     return np.random.choice(possible_friends, num_recommendations, replace=False).tolist()
 
     # 假设有一个用户的ID是user_id_to_recommend
-    user_id_to_recommend = user_ids[0]  # 举例来说，我们取第一个用户的ID
-
-    # 获取推荐的好友列表
-    recommended_friend_ids = recommend_friends(user_id_to_recommend, clustered_users, n_recommendations=10)
-
-    # 打印推荐的好友用户ID
-    print("Recommended Friends for User ID", user_id_to_recommend, ":", recommended_friend_ids)
 
 db_init(config.DATABASE_URL)
 with get_session() as session:

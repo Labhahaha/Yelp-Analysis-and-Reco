@@ -1,4 +1,3 @@
-#coding = gbk
 from flask import Flask
 from flask_cors import CORS
 from .DataAnalyse import business_blue,users_blue,checkin_blue,comprehensive_blue,stars_blue,db_init

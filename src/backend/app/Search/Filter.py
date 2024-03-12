@@ -1,4 +1,3 @@
-# coding=gbk
 from flask import Blueprint
 
 # ´´½¨À¶Í¼
