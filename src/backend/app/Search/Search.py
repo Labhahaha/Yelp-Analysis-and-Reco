@@ -1,7 +1,7 @@
 # coding=gbk
 from flask import Blueprint, jsonify, json
 from flask import request
-from ..Recommendation.recommend import get_business_by_city
+from ..Recommendation.Recommend import get_business_by_city
 
 # 创建蓝图
 search_blue = Blueprint('search', __name__, )

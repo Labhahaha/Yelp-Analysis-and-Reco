@@ -18,7 +18,7 @@ def create_app(config):
     app.register_blueprint(comprehensive_blue, url_prefix='/comprehensive')
     app.register_blueprint(recommend_blue, url_prefix='/recommend')
     app.register_blueprint(search_blue, url_prefix='/search')
-    print(app.url_map)
+
     return app
 
 

@@ -9,7 +9,6 @@ recommend_blue = Blueprint('recommend_blue', __name__)
 business_df = None
 review_df = None
 
-
 @recommend_blue.route('/recommend')
 def get_recommendations():
     global business_df,review_df
@@ -87,7 +86,7 @@ def get_distance_for_business(user_location):
 def getBusinessDetails():
     business_id = request.args.get('business_id')
     res = {
-        'business': business_df[business_df['business_id'] == business_id].to_dict(orient='records'),
+        'business': business_df[business_df['business_id'] == business_id].to_dict(orient='records')[0],
         'review': review_df[review_df['rev_business_id'] == business_id].to_dict(orient='records'),
     }
     res = jsonify(res)
