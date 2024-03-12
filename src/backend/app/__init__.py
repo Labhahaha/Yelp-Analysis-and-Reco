@@ -5,7 +5,7 @@ from .DataAnalyse import business_blue,users_blue,checkin_blue,comprehensive_blu
 from .Recommendation import recommend_blue
 from .Search import search_blue
 def create_app(config):
-    #ÊµÀý»¯app
+    #Êµï¿½ï¿½ï¿½ï¿½app
     app = Flask(__name__)
     CORS(app, supports_credentials=True)
 

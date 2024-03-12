@@ -1,48 +1,52 @@
+#coding=gbk
 import pandas as pd
 from flask import Blueprint, request, json, jsonify
 from sqlalchemy import text
 from ..DataAnalyse.SQLSession import get_session, toDataFrame
 from ..utils import cal_distance, get_business_by_city
 from .CollaborativeFiltering import CollaborativeFiltering
+from .QueryBased import match_rating
 recommend_blue = Blueprint('recommend_blue', __name__)
 
 business_df = None
 review_df = None
 city = None
-
 @recommend_blue.route('/recommend')
 def get_recommendations():
     global business_df,review_df,city
-    # è·å–æ¨èæ‰€éœ€å‚æ•°
+    # »ñÈ¡ÍÆ¼öËùĞè²ÎÊı
     user_location = json.loads(request.args.get('user_location'))
     user_id = request.args.get('user_id')
     query = request.args.get('query')
     res = request.args.get('city')
     print(res != city)
     if (city is None) or (res != city):
-        # åˆå§‹åŒ–è¯¥åŸå¸‚dataframeä¿¡æ¯
+        # ³õÊ¼»¯¸Ã³ÇÊĞdataframeĞÅÏ¢
         city = res
         business_df = get_business_by_city(city)
         review_df = get_review_by_business(tuple(business_df['business_id'].values))
 
-    #ååŒè¿‡æ»¤ç®—æ³•å€™é€‰é›†
+    #Ğ­Í¬¹ıÂËËã·¨ºòÑ¡¼¯
     candidate_set1 = get_collaborative_filtering_candidate_set(user_id, business_df,20)
     print(candidate_set1)
 
-    #åŸºäºä½ç½®çš„å€™é€‰é›†
+    #»ùÓÚÎ»ÖÃµÄºòÑ¡¼¯
     candidate_set2 = get_location_based_candidate_set(user_location)
-    #åŸºäºæŸ¥è¯¢çš„å€™é€‰é›†
-    candidate_set3 = get_query_based_candidate_set(query)
-    #åŸºäºçƒ­ç‚¹çš„æ›¿è¡¥é›†
+
+    #»ùÓÚ²éÑ¯µÄºòÑ¡¼¯
+    candidate_set3 = get_query_based_candidate_set(query,business_df,20)
+    print(candidate_set3)
+
+    #»ùÓÚÈÈµãµÄÌæ²¹¼¯
     candidate_set4 = get_alternate_set(user_location)
 
-    #å€™é€‰é›†èåˆ
+    #ºòÑ¡¼¯ÈÚºÏ
     fused_candidate = fuse_candidate_set(candidate_set1,candidate_set2,candidate_set3,candidate_set4)
 
-    #å€™é€‰é›†é‡æ’åº
+    #ºòÑ¡¼¯ÖØÅÅĞò
     recommend_list = re_sort(fused_candidate)
 
-    #åŠ è½½æ¨èåˆ—è¡¨ç›¸å…³ä¿¡æ¯
+    #¼ÓÔØÍÆ¼öÁĞ±íÏà¹ØĞÅÏ¢
     recommend_list_withInfo = add_Info(recommend_list)
 
     return business_df.to_json(orient='records')
@@ -57,8 +61,12 @@ def get_collaborative_filtering_candidate_set(user_id, business_df,k):
 def get_location_based_candidate_set(user_location):
     pass
 
-def get_query_based_candidate_set(query):
-    pass
+def get_query_based_candidate_set(query,business_df,k):
+    business_texts = pd.DataFrame({'business_text': business_df['name'] + ' ' + business_df['categories']})
+    rating_list = match_rating(query, business_texts)
+    rating_list = pd.concat([business_df, rating_list],axis=1)
+    top_k_recommendations = rating_list.sort_values(by='match_rating', ascending=False).head(k)
+    return top_k_recommendations[['business_id','name','match_rating']]
 
 def get_alternate_set(user_location):
     pass

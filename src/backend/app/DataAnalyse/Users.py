@@ -3,11 +3,11 @@ from sqlalchemy import text
 
 from .SQLSession import get_session, toJSON
 
-# ´´½¨À¶Í¼
+# åˆ›å»ºè“å›¾
 users_blue = Blueprint('users', __name__, )
 
 
-# Í³¼ÆÃ¿Äê¼ÓÈëµÄÓÃ»§ÊıÁ¿
+# ç»Ÿè®¡æ¯å¹´åŠ å…¥çš„ç”¨æˆ·æ•°é‡
 @users_blue.route('/user_count_by_registration_year')
 def user_count_by_registration_year():
     with get_session() as session:
@@ -17,7 +17,7 @@ def user_count_by_registration_year():
         return json_res
 
 
-# Í³¼ÆÆÀÂÛ´ïÈË
+# ç»Ÿè®¡è¯„è®ºè¾¾äºº
 @users_blue.route('/user_with_most_review')
 def user_with_most_review():
     with get_session() as session:
@@ -27,7 +27,7 @@ def user_with_most_review():
         return json_res
 
 
-# Í³¼ÆÈËÆø×î¸ßµÄÓÃ»§
+# ç»Ÿè®¡äººæ°”æœ€é«˜çš„ç”¨æˆ·
 @users_blue.route('/user_with_most_fans')
 def user_with_most_fans():
     with get_session() as session:
@@ -37,7 +37,7 @@ def user_with_most_fans():
         return json_res
 
 
-# Í³¼ÆÃ¿ÄêÓÅÖÊÓÃ»§¡¢ÆÕÍ¨ÓÃ»§±ÈÀı
+# ç»Ÿè®¡æ¯å¹´ä¼˜è´¨ç”¨æˆ·ã€æ™®é€šç”¨æˆ·æ¯”ä¾‹
 @users_blue.route('/elite_user_ratio')
 def elite_user_ratio():
     with get_session() as session:
@@ -47,7 +47,7 @@ def elite_user_ratio():
         return json_res
 
 
-# ÏÔÊ¾Ã¿Äê×ÜÓÃ»§Êı¡¢³ÁÄ¬ÓÃ»§Êı£¨Î´Ğ´ÆÀÂÛ£©µÄ±ÈÀı
+# æ˜¾ç¤ºæ¯å¹´æ€»ç”¨æˆ·æ•°ã€æ²‰é»˜ç”¨æˆ·æ•°ï¼ˆæœªå†™è¯„è®ºï¼‰çš„æ¯”ä¾‹
 @users_blue.route('/silent_user_ratio')
 def silent_user_ratio():
     with get_session() as session:
@@ -57,7 +57,7 @@ def silent_user_ratio():
         return json_res
 
 
-# Í³¼Æ³öÃ¿ÄêµÄÆÀÂÛÊı
+# ç»Ÿè®¡å‡ºæ¯å¹´çš„è¯„è®ºæ•°
 @users_blue.route('/review_count_bu_year')
 def review_count_bu_year():
     with get_session() as session:
@@ -67,7 +67,7 @@ def review_count_bu_year():
         return json_res
 
 
-# Í³¼Æ³öÃ¿ÄêµÄ¾«Ó¢ÓÃ»§
+# ç»Ÿè®¡å‡ºæ¯å¹´çš„ç²¾è‹±ç”¨æˆ·
 @users_blue.route('/elite_user_count_by_year')
 def elite_user_count_by_year():
     with get_session() as session:
@@ -77,7 +77,7 @@ def elite_user_count_by_year():
         return json_res
 
 
-# Í³¼Æ³öÃ¿ÄêµÄtipÊı
+# ç»Ÿè®¡å‡ºæ¯å¹´çš„tipæ•°
 @users_blue.route('/tip_count_by_year')
 def tip_count_by_year():
     with get_session() as session:
@@ -87,7 +87,7 @@ def tip_count_by_year():
         return json_res
 
 
-# Í³¼Æ³öÃ¿ÄêµÄ´ò¿¨Êı
+# ç»Ÿè®¡å‡ºæ¯å¹´çš„æ‰“å¡æ•°
 @users_blue.route('/checkin_count_by_year')
 def checkin_count_by_year():
     with get_session() as session:
