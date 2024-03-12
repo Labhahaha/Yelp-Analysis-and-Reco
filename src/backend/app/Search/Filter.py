@@ -25,8 +25,6 @@ def filter_by_distance(filter_condition, df):
     elif filter_condition == "(5,n)":
         filter_df = filter_df[filter_df["distance"] >=5000]
 
-    print(filter_df)
-
     return filter_df
 
 
