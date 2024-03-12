@@ -5,3 +5,4 @@ print('Mysql连接IP:'+str(Local_IP))
 # 数据库连接配置
 DATABASE_URL = f'mysql+pymysql://root:123456@{Local_IP}:3306/yelp'
 TRACK_MODIFICATIONS = False
+
