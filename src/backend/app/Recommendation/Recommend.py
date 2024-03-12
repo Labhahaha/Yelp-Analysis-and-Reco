@@ -2,7 +2,7 @@ import pandas as pd
 from flask import Blueprint, request, json, jsonify
 from sqlalchemy import text
 from ..DataAnalyse.SQLSession import get_session, toDataFrame
-from ..utils.get_distance import cal_distance
+from ..utils import cal_distance, get_business_by_city
 
 recommend_blue = Blueprint('recommend_blue', __name__)
 
@@ -63,12 +63,6 @@ def re_sort(fused_candidate):
 def add_Info(recommend_list):
     pass
 
-def get_business_by_city(city):
-    with get_session() as session:
-        query = text(f"select * from business where city = '{city}'")
-        res = session.execute(query)
-        res = toDataFrame(res)
-        return res
 def get_review_by_business(business):
     with get_session() as session:
         query = text(f"select * from review where rev_business_id in {business}")
