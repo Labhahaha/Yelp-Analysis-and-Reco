@@ -2,7 +2,7 @@ import pandas as pd
 from flask import Blueprint, request, json, jsonify
 from sqlalchemy import text
 from ..DataAnalyse.SQLSession import get_session, toDataFrame
-from ..utils import cal_distance, get_business_by_city
+from ..utils import get_business_by_city
 from .CollaborativeFiltering import CollaborativeFiltering
 from .QueryBased import match_rating
 recommend_blue = Blueprint('recommend_blue', __name__)
@@ -30,12 +30,12 @@ def get_recommendations():
         pass
 
     if user_location is not None and query is None:
-        candidate_set2 = get_location_based_candidate_set(user_location)
+        candidate_set2 = get_location_based_candidate_set(user_location,business_df)
         candidate_set4 = get_alternate_set(user_location)
 
     if query is not None:
-        #candidate_set3 = get_query_based_candidate_set(query,business_df,20)
-        #print(candidate_set3)
+        candidate_set3 = get_query_based_candidate_set(query,business_df,20)
+        print(candidate_set3)
         pass
 
     #fused_candidate = fuse_candidate_set(candidate_set1,candidate_set2,candidate_set3,candidate_set4)
@@ -53,7 +53,7 @@ def get_collaborative_filtering_candidate_set(user_id, business_df,k):
     top_k_recommendations = rating_list.sort_values(by='rating', ascending=False).head(k)
     return top_k_recommendations[['business_id','name','rating']]
 
-def get_location_based_candidate_set(user_location):
+def get_location_based_candidate_set(user_location,business_df):
     pass
 
 def get_query_based_candidate_set(query,business_df,k):
@@ -79,11 +79,6 @@ def get_review_by_business(business):
         res = session.execute(query)
         res = toDataFrame(res)
         return res
-
-def get_distance_for_business(user_location):
-    global business_df
-    business_df['distance'] = business_df.apply(
-        lambda row: cal_distance(user_location, [row['longitude'], row['latitude']]), axis=1)
 
 
 @recommend_blue.route('/details')
