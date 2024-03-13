@@ -62,19 +62,26 @@ def top10_negative_words():
         res = jsonify(res)
         return res
 
-# @review_blue.route('/noun_words')
-# def noun_words():
-#     with get_session() as session:
-#         query = text("select * from noun_words")
-#         res = session.execute(query)
-#         json_res = toJSON(res)
-#         return json_res
-#
-# @review_blue.route('/adjective_words')
-# def adjective_words():
-#     with get_session() as session:
-#         query = text("select * from adjective_words")
-#         res = session.execute(query)
-#         json_res = toJSON(res)
-#         return json_res
+@review_blue.route('/helpful_review')
+def helpful_review():
+    with get_session() as session:
+        query = text("select * from helpful_review")
+        res = session.execute(query)
+        json_res = toJSON(res)
+        return json_res
 
+@review_blue.route('/funny_review')
+def funny_review():
+    with get_session() as session:
+        query = text("select * from funny_review")
+        res = session.execute(query)
+        json_res = toJSON(res)
+        return json_res
+
+@review_blue.route('/cool_review')
+def cool_review():
+    with get_session() as session:
+        query = text("select * from cool_review")
+        res = session.execute(query)
+        json_res = toJSON(res)
+        return json_res
