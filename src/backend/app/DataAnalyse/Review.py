@@ -62,6 +62,27 @@ def top10_negative_words():
         res = jsonify(res)
         return res
 
+
+@review_blue.route('/different_review')
+def different_review():
+    with get_session() as session:
+        query1 = text("select * from helpful_review")
+        res1 = session.execute(query1)
+        res1_df = toDataFrame(res1)
+        query2 = text("select * from funny_review")
+        res2 = session.execute(query2)
+        res2_df = toDataFrame(res2)
+        query3 = text("select * from cool_review")
+        res3 = session.execute(query3)
+        res3_df = toDataFrame(res3)
+        res = {
+            'helpful':res1_df.to_dict('records'),
+            'funny':res2_df.to_dict('records'),
+            'cool':res3_df.to_dict('records')
+        }
+        res_json = jsonify(res)
+        return res_json
+
 @review_blue.route('/helpful_review')
 def helpful_review():
     with get_session() as session:
