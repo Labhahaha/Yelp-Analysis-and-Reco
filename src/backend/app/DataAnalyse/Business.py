@@ -115,8 +115,11 @@ def different_types_restaurant_stars():
     with get_session() as session:
         query = text("select * from different_types_restaurant_stars")
         res = session.execute(query)
+        json_res = toJSON(res)
+        return json_res
 
 # 统计不同类型的餐厅的各项数据合并
+@business_blue.route('/different_types_restaurant')
 def different_types_restaurant():
     with get_session() as session:
         query = text("select * from different_types_restaurant")
