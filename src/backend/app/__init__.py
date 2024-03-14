@@ -4,12 +4,11 @@ from .DataAnalyse import business_blue,users_blue,checkin_blue,comprehensive_blu
 from .Recommendation import recommend_blue
 from .Search import search_blue
 from .Friends import friends_blue
+
 def create_app(config):
     app = Flask(__name__)
     CORS(app, supports_credentials=True)
-
     db_init(config.DATABASE_URL)
-    filter_words()
     app.register_blueprint(business_blue, url_prefix='/business')
     app.register_blueprint(users_blue, url_prefix='/users')
     app.register_blueprint(checkin_blue, url_prefix='/checkin')
