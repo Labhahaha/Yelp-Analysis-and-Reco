@@ -56,9 +56,7 @@ def get_review_same_business(user_id):
 
 def find_candidate_set(user_id):
     friends_of_friends_ids = get_friends_of_friends(user_id)
-    print('1')
     review_same_business_ids = get_review_same_business(user_id)
-    print('2')
     candidate_set_ids = list(set(friends_of_friends_ids) | set(review_same_business_ids))
     candidate_set_ids = tuple(random.sample(candidate_set_ids, int(len(candidate_set_ids)*0.1)))
     with get_session() as session:
@@ -72,7 +70,6 @@ def find_candidate_set(user_id):
                      WHERE user_id in {candidate_set_ids}
                      """)
         df = session.execute(query)
-        print('3')
         df = toDataFrame(df)
     df['user_friends_count'] = df['user_friends'].str.count(', ')
     df = df.drop(columns=['user_friends'])
@@ -91,7 +88,6 @@ def get_user_feature(user_id):
                              WHERE user_id = '{user_id}'
                              """)
         df = session.execute(query)
-        print('4')
         df = toDataFrame(df)
 
     df['user_friends_count'] = df['user_friends'].str.count(', ')

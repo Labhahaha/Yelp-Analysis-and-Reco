@@ -2,40 +2,42 @@ import pandas as pd
 from flask import Blueprint, request, json, jsonify
 from sqlalchemy import text
 from ..DataAnalyse.SQLSession import get_session, toDataFrame
-from ..utils import get_business_by_city
+from ..utils import get_business_by_city, cal_distance
 from .CollaborativeFiltering import CollaborativeFiltering
 from .QueryBased import match_rating
 from .LocationBased import location_based_list
 
 recommend_blue = Blueprint('recommend_blue', __name__)
-
 business_df = None
 review_df = None
-city = None
+city = 'Abington'
+last_city = None
 user_location = None
 user_id = None
 
 
 @recommend_blue.route('/recommend')
 def get_recommendations():
-    global business_df, review_df, city, user_location, user_id
+    global business_df, review_df, city, last_city, user_location, user_id
     p_user_id = request.args.get('user_id')
     p_city = request.args.get('city')
     p_user_location = json.loads(request.args.get('user_location'))
 
     query = request.args.get('query')
 
-    #更新参数
+    # 更新参数
     if p_user_id is not None:
         user_id = p_user_id
     if p_user_location is not None:
         user_location = p_user_location
-    # 读取城市且更新
     if p_city is not None:
-        if (city is None) or (p_city != city):
-            city = p_city
-            business_df = get_business_by_city(city)
-            review_df = get_review_by_business(tuple(business_df['business_id'].values))
+        city = p_city
+
+    # 更新城市信息
+    if city != last_city:
+        last_city = city
+        business_df = get_business_by_city(city)
+        review_df = get_review_by_business(tuple(business_df['business_id'].values))
 
     # 基于查询的推荐
     if query is not None:
@@ -59,14 +61,14 @@ def get_recommendations():
     candidate_set4 = get_alternate_set(business_df, 36)
 
     # 候选集融合和过滤
-    fused_candidate = fuse_candidate_set(candidate_set1,candidate_set2,candidate_set3,candidate_set4)
+    fused_candidate = fuse_candidate_set(candidate_set1, candidate_set2, candidate_set3, candidate_set4)
 
     # 候选集重排序
-    #recommend_list = re_sort(fused_candidate)
+    recommend_list = re_sort(fused_candidate)
 
-    # recommend_list_withInfo = add_Info(recommend_list)
+    recommend_list_withInfo = add_Info(recommend_list, business_df)
 
-    return business_df.to_json(orient='records')
+    return recommend_list_withInfo.to_json(orient='records')
 
 
 def get_collaborative_filtering_candidate_set(user_id, business_df, k):
@@ -92,6 +94,7 @@ def get_query_based_candidate_set(query, business_df, k):
     print(top_k_recommendations[['business_id', 'name', 'match_rating']])
     return top_k_recommendations['business_id']
 
+
 def get_alternate_set(business_df, k):
     # 归一化评分和评价数量列
     normalized_stars = (business_df['stars'] - business_df['stars'].min()) / (
@@ -115,14 +118,22 @@ def fuse_candidate_set(candidate_set1, candidate_set2, candidate_set3, candidate
         res = candidate_set1
     elif candidate_set2 is not None:
         res = candidate_set2
-
+    else:
+        res = candidate_set4
+    return res
 
 
 def re_sort(fused_candidate):
-    pass
+    return fused_candidate
 
-def add_Info(fused_candidate):
-    pass
+
+def add_Info(fused_candidate, business_df):
+    global user_location
+    res = pd.merge(fused_candidate, business_df, how='left', on='business_id')
+    if user_location is not None:
+        res['distance'] = res.apply(lambda row: cal_distance(user_location, [row['longitude'], row['latitude']]),
+                                    axis=1)
+    return res
 
 
 def get_review_by_business(business):
