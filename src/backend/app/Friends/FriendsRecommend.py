@@ -1,47 +1,33 @@
+import random
+
 from flask import Blueprint, jsonify, json
 from flask import request
 from scipy.spatial.distance import euclidean
 from sklearn.preprocessing import StandardScaler
 from sqlalchemy import text
-import numpy as np
 from ..DataAnalyse.SQLSession import get_session, toDataFrame
-
-import pandas as pd
-
-from datetime import datetime
 from joblib import load
-from sklearn.decomposition import PCA
 
 friends_blue = Blueprint('friends', __name__)
 
-
 def get_friends_of_friends(user_id):
     with get_session() as session:
-        query = f"""
-        SELECT user_friends
-        From users
-        WHERE user_id = '{user_id}'
-        """
+        query = text(f"SELECT user_friends From users WHERE user_id = '{user_id}'")
         df = session.execute(query)
         df = toDataFrame(df)
     if df.size == 0:
         return None
-    friend_ids = df['user_friends'][0].split(', ')
+    friend_ids = tuple(df['user_friends'][0].split(', '))
 
-    # print(friend_ids[0])
     friend_of_friend_ids = []
     with get_session() as session:
-        for friend_id in friend_ids:
-            query = f"""
-                    SELECT user_friends
-                    From users
-                    WHERE user_id = '{friend_id}'
-                    """
-            friend_df = session.execute(query)
-            friend_df = toDataFrame(friend_df)
-            if friend_df.size != 0:
-                friend_of_friend_ids.extend(
-                    friend_df['user_friends'][0].split(', '))
+        query = text(f"SELECT user_friends From users WHERE user_id in {friend_ids}")
+        friend_df = session.execute(query)
+        friend_df = toDataFrame(friend_df)
+
+    for row in friend_df['user_friends']:
+        ids = row.split(', ')
+        friend_of_friend_ids.extend(ids)
     # 去重并排除已经是好友的用户
     result = list(set(friend_of_friend_ids) - set(friend_ids))
     return result
@@ -49,28 +35,15 @@ def get_friends_of_friends(user_id):
 
 def get_review_same_business(user_id):
     with get_session() as session:
-        query = f"""
-        SELECT DISTINCT rev_user_id AS user_id
-        FROM review
-        WHERE rev_business_id in
-                                (
-                                    SELECT DISTINCT rev_business_id
-                                    From review
-                                    WHERE rev_user_id = '{user_id}'
-                                )
-             AND rev_user_id != '{user_id}'
-        """
+        query = text(f"SELECT DISTINCT rev_user_id AS user_id FROM review WHERE rev_business_id in \
+        (SELECT DISTINCT rev_business_id From review WHERE rev_user_id = '{user_id}') AND rev_user_id != '{user_id}'")
         df = session.execute(query)
         df = toDataFrame(df)
     if df.size == 0:
         return None
     review_same_business = df['user_id'].tolist()
     with get_session() as session:
-        query = f"""
-        SELECT user_friends
-        From users
-        WHERE user_id = '{user_id}'
-        """
+        query = text(f"SELECT user_friends From users WHERE user_id = '{user_id}'")
         df = session.execute(query)
         df = toDataFrame(df)
     if df.size == 0:
@@ -83,9 +56,11 @@ def get_review_same_business(user_id):
 
 def find_candidate_set(user_id):
     friends_of_friends_ids = get_friends_of_friends(user_id)
+    print('1')
     review_same_business_ids = get_review_same_business(user_id)
+    print('2')
     candidate_set_ids = list(set(friends_of_friends_ids) | set(review_same_business_ids))
-    candidate_set_string = ', '.join(["'{}'".format(item) for item in candidate_set_ids])
+    candidate_set_ids = tuple(random.sample(candidate_set_ids, int(len(candidate_set_ids)*0.1)))
     with get_session() as session:
         query = text(f"""
                      SELECT user_id, user_name, user_friends, user_average_stars, user_review_count, user_useful, 
@@ -94,11 +69,11 @@ def find_candidate_set(user_id):
                             user_compliment_plain, user_compliment_cool, user_compliment_funny, user_compliment_writer,
                             user_compliment_photos
                      FROM users
-                     WHERE user_id in ({candidate_set_string})
+                     WHERE user_id in {candidate_set_ids}
                      """)
         df = session.execute(query)
+        print('3')
         df = toDataFrame(df)
-
     df['user_friends_count'] = df['user_friends'].str.count(', ')
     df = df.drop(columns=['user_friends'])
     df['user_average_stars'] = df['user_average_stars'].astype(int)
@@ -116,6 +91,7 @@ def get_user_feature(user_id):
                              WHERE user_id = '{user_id}'
                              """)
         df = session.execute(query)
+        print('4')
         df = toDataFrame(df)
 
     df['user_friends_count'] = df['user_friends'].str.count(', ')
@@ -123,10 +99,9 @@ def get_user_feature(user_id):
     df['user_average_stars'] = df['user_average_stars'].astype(int)
     return df
 
-@friends_blue.route("/")
+@friends_blue.route("/recommend_friends")
 def recommend_friends():
     user_id = request.args.get("user_id")
-
     k = 25
     scaler = StandardScaler()
     pca = load(f'config/model/pca10.joblib')
@@ -139,7 +114,8 @@ def recommend_friends():
     user_cluster_id = kmeans.predict(user_X_pca)[0]
 
     candidate_set_df = find_candidate_set(user_id)
-    print(len(candidate_set_df))
+
+
     candidate_set_X = candidate_set_df.drop(columns=['user_id', 'user_name'])
     scaler.fit(candidate_set_X.values)
     candidate_set_X_scaled = scaler.transform(candidate_set_X.values)
@@ -152,7 +128,6 @@ def recommend_friends():
                                         'user_compliment_cool', 'user_compliment_funny', 'user_compliment_writer',
                                         'user_compliment_photos'])
     df['cluster_id'] = cluster_ids
-    # print(df)
     distances = []
     for idx, cluster in enumerate(cluster_ids):
         if cluster == user_cluster_id:
