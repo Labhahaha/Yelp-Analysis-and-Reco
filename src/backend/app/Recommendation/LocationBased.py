@@ -24,14 +24,14 @@ def get_businesses_in_district(business_df, district_ids):
     return businesses_in_district
 
 # 示例用法
-def location_based_list(user_location,business_df,k=1):
+def location_based_list(user_location,business_df,k=36):
     business_df = find_business_districts(business_df,n_clusters=10)
-    top_k_districts = top_k_districts_by_orders(business_df, k)
+    top_k_districts = top_k_districts_by_orders(business_df, 2)
     businesses_in_district = get_businesses_in_district(business_df,top_k_districts)
     businesses_in_district = businesses_in_district.copy()
     businesses_in_district['distance'] = businesses_in_district.apply(lambda row: cal_distance(user_location, [row['longitude'], row['latitude']]), axis=1)
     businesses_in_district = businesses_in_district[businesses_in_district['distance']/1000<6]
-    businesses_in_district = businesses_in_district.sort_values(by='distance', ascending=True).head(20)
+    businesses_in_district = businesses_in_district.sort_values(by='distance', ascending=True).head(k)
     return businesses_in_district
 
 
