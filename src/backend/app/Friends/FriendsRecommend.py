@@ -1,47 +1,180 @@
 from flask import Blueprint, jsonify, json
 from flask import request
-from sqlalchemy import text
-import pandas as pd
-import numpy as np
-from sklearn.cluster import KMeans
+from scipy.spatial.distance import euclidean
 from sklearn.preprocessing import StandardScaler
-from datetime import datetime
-from src.backend.app.DataAnalyse.SQLSession import (get_session, toJSON, toDataFrame, db_init)
-from src.backend.config import config
+from sqlalchemy import text
+import numpy as np
+from ..DataAnalyse.SQLSession import get_session, toDataFrame
+
 import pandas as pd
-from sklearn.impute import SimpleImputer
+
 from datetime import datetime
-import pickle
+from joblib import load
+from sklearn.decomposition import PCA
 
-friends_blue = Blueprint('Friends', __name__)
-# 111
+friends_blue = Blueprint('friends', __name__)
 
+
+def get_friends_of_friends(user_id):
+    with get_session() as session:
+        query = f"""
+        SELECT user_friends
+        From users
+        WHERE user_id = '{user_id}'
+        """
+        df = session.execute(query)
+        df = toDataFrame(df)
+    if df.size == 0:
+        return None
+    friend_ids = df['user_friends'][0].split(', ')
+
+    # print(friend_ids[0])
+    friend_of_friend_ids = []
+    with get_session() as session:
+        for friend_id in friend_ids:
+            query = f"""
+                    SELECT user_friends
+                    From users
+                    WHERE user_id = '{friend_id}'
+                    """
+            friend_df = session.execute(query)
+            friend_df = toDataFrame(friend_df)
+            if friend_df.size != 0:
+                friend_of_friend_ids.extend(
+                    friend_df['user_friends'][0].split(', '))
+    # 去重并排除已经是好友的用户
+    result = list(set(friend_of_friend_ids) - set(friend_ids))
+    return result
+
+
+def get_review_same_business(user_id):
+    with get_session() as session:
+        query = f"""
+        SELECT DISTINCT rev_user_id AS user_id
+        FROM review
+        WHERE rev_business_id in
+                                (
+                                    SELECT DISTINCT rev_business_id
+                                    From review
+                                    WHERE rev_user_id = '{user_id}'
+                                )
+             AND rev_user_id != '{user_id}'
+        """
+        df = session.execute(query)
+        df = toDataFrame(df)
+    if df.size == 0:
+        return None
+    review_same_business = df['user_id'].tolist()
+    with get_session() as session:
+        query = f"""
+        SELECT user_friends
+        From users
+        WHERE user_id = '{user_id}'
+        """
+        df = session.execute(query)
+        df = toDataFrame(df)
+    if df.size == 0:
+        return None
+    friend_ids = df['user_friends'][0].split(', ')
+    # 去重并排除已经是好友的用户
+    result = list(set(review_same_business) - set(friend_ids))
+    return result
+
+
+def find_candidate_set(user_id):
+    friends_of_friends_ids = get_friends_of_friends(user_id)
+    review_same_business_ids = get_review_same_business(user_id)
+    candidate_set_ids = list(set(friends_of_friends_ids) | set(review_same_business_ids))
+    candidate_set_string = ', '.join(["'{}'".format(item) for item in candidate_set_ids])
+    with get_session() as session:
+        query = text(f"""
+                     SELECT user_id, user_name, user_friends, user_average_stars, user_review_count, user_useful, 
+                            user_funny, user_cool, user_fans, user_compliment_hot, user_compliment_more, 
+                            user_compliment_profile, user_compliment_cute, user_compliment_list, user_compliment_note, 
+                            user_compliment_plain, user_compliment_cool, user_compliment_funny, user_compliment_writer,
+                            user_compliment_photos
+                     FROM users
+                     WHERE user_id in ({candidate_set_string})
+                     """)
+        df = session.execute(query)
+        df = toDataFrame(df)
+
+    df['user_friends_count'] = df['user_friends'].str.count(', ')
+    df = df.drop(columns=['user_friends'])
+    df['user_average_stars'] = df['user_average_stars'].astype(int)
+    return df
+
+
+def get_user_feature(user_id):
+    with get_session() as session:
+        query = text(f"""
+                             SELECT user_friends, user_average_stars, user_review_count, user_useful, user_funny,
+                                    user_cool, user_fans, user_compliment_hot, user_compliment_more, user_compliment_profile,
+                                    user_compliment_cute, user_compliment_list, user_compliment_note, user_compliment_plain,
+                                    user_compliment_cool, user_compliment_funny, user_compliment_writer,user_compliment_photos
+                             FROM users
+                             WHERE user_id = '{user_id}'
+                             """)
+        df = session.execute(query)
+        df = toDataFrame(df)
+
+    df['user_friends_count'] = df['user_friends'].str.count(', ')
+    df = df.drop(columns=['user_friends'])
+    df['user_average_stars'] = df['user_average_stars'].astype(int)
+    return df
 
 @friends_blue.route("/")
-def recommend_friends(user_id, clustered_users, n_recommendations=10):
-    # 找到用户所在的簇
-    for cluster_id, users in clustered_users.items():
-        if user_id in users:
-            # 从该簇中除了用户自己以外的用户列表中随机选择
-            possible_friends = [uid for uid in users if uid != user_id]
-            break
-    else:
-        return []  # 如果用户ID不在列表中，则返回空列表
+def recommend_friends():
+    user_id = request.args.get("user_id")
 
-    # 随机选取推荐的好友数量
-    num_recommendations = min(n_recommendations, len(possible_friends))
+    k = 25
+    scaler = StandardScaler()
+    pca = load(f'config/model/pca10.joblib')
+    kmeans = load(f'config/model/kmeans_model{k}.joblib')
 
-    # 随机选择并返回推荐的好友
-    return np.random.choice(possible_friends, num_recommendations, replace=False).tolist()
+    user_X = get_user_feature(user_id)
+    scaler.fit(user_X.values)
+    user_X_scaled = scaler.fit_transform(user_X.values)
+    user_X_pca = pca.transform(user_X_scaled)
+    user_cluster_id = kmeans.predict(user_X_pca)[0]
 
-    # 假设有一个用户的ID是user_id_to_recommend
-    user_id_to_recommend = user_ids[0]  # 举例来说，我们取第一个用户的ID
+    candidate_set_df = find_candidate_set(user_id)
+    print(len(candidate_set_df))
+    candidate_set_X = candidate_set_df.drop(columns=['user_id', 'user_name'])
+    scaler.fit(candidate_set_X.values)
+    candidate_set_X_scaled = scaler.transform(candidate_set_X.values)
+    candidate_set_X_pca = pca.transform(candidate_set_X_scaled)
+    cluster_ids = kmeans.predict(candidate_set_X_pca)
+    df = candidate_set_df.drop(columns=['user_friends_count', 'user_average_stars', 'user_review_count', 'user_useful',
+                                        'user_funny', 'user_cool', 'user_fans', 'user_compliment_hot',
+                                        'user_compliment_more', 'user_compliment_profile', 'user_compliment_cute',
+                                        'user_compliment_list', 'user_compliment_note', 'user_compliment_plain',
+                                        'user_compliment_cool', 'user_compliment_funny', 'user_compliment_writer',
+                                        'user_compliment_photos'])
+    df['cluster_id'] = cluster_ids
+    # print(df)
+    distances = []
+    for idx, cluster in enumerate(cluster_ids):
+        if cluster == user_cluster_id:
+            distance = euclidean(user_X_pca[0], candidate_set_X_pca[idx])
+            distances.append((idx, distance))
 
-    # 获取推荐的好友列表
-    recommended_friend_ids = recommend_friends(user_id_to_recommend, clustered_users, n_recommendations=10)
+    # 根据距离找到距离最近的10个数据点
+    distances.sort(key=lambda x: x[1])  # 按距离升序排序
 
-    # 打印推荐的好友用户ID
-    print("Recommended Friends for User ID", user_id_to_recommend, ":", recommended_friend_ids)
+    count = 10
+    nearest = distances[:min(count, len(cluster_ids))]  # 获取前10个距离最近的数据点的索引和距离
+    nearest_list = []
+    for n in nearest:
+        nearest_list.append(n[0])
+    # 提取距离最近的10个数据点
+    candidate_set_df = candidate_set_df[['user_id', 'user_name']]
+    nearest_data = candidate_set_df.loc[nearest_list]
+    return json.dumps(nearest_data.to_dict(orient='records'))
+
+
+
+
 
 
 
