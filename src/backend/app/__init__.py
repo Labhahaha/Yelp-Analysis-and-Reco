@@ -18,7 +18,7 @@ def create_app(config):
     app.register_blueprint(review_blue, url_prefix='/review')
     app.register_blueprint(recommend_blue, url_prefix='/recommend')
     app.register_blueprint(search_blue, url_prefix='/search')
-    app.register_blueprint(friends_blue, url_prefix='/Friends')
+    app.register_blueprint(friends_blue, url_prefix='/friends')
 
 
     return app
