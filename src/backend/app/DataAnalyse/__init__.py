@@ -4,3 +4,5 @@ from .Comprehensive import comprehensive_blue
 from .SQLSession import db_init
 from .Stars import stars_blue
 from .Users import users_blue
+from .Review import review_blue
+from .Review import filter_words
