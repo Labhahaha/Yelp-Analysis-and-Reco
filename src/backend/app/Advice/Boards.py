@@ -80,7 +80,11 @@ def get_business_rank_in_category(business_id,business_df):
 
 def analyze_star_count(business_id):
     with get_session() as session:
-        query = text("select rev_stars, COUNT(*) as count from review WHERE rev_business_id = :business_id GROUP BY rev_stars")
+        query = text("""select rev_stars, 
+        COUNT(*) as count from review 
+        WHERE rev_business_id = :business_id 
+        GROUP BY rev_stars 
+        ORDER BY rev_stars""")
         res = session.execute(query, {"business_id": business_id})
         res = toDataFrame(res)
     return res
