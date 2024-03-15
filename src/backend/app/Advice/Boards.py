@@ -1,9 +1,9 @@
 from flask import request, Blueprint, jsonify
 from sqlalchemy import text
 from ..Recommendation.Recommend import get_business_by_city
-
 from  ..DataAnalyse.SQLSession import toJSON,get_session,toDataFrame
 from . import Advice
+from .Sentiment import analyze_reviews_for_business
 boards_blue = Blueprint('boards', __name__)
 
 business_df = None
@@ -80,11 +80,7 @@ def get_business_rank_in_category(business_id,business_df):
 
 def analyze_star_count(business_id):
     with get_session() as session:
-        query = text("""select rev_stars, 
-        COUNT(*) as count from review 
-        WHERE rev_business_id = :business_id 
-        GROUP BY rev_stars 
-        ORDER BY rev_stars""")
+        query = text("select rev_stars, COUNT(*) as count from review WHERE rev_business_id = :business_id GROUP BY rev_stars")
         res = session.execute(query, {"business_id": business_id})
         res = toDataFrame(res)
     return res
@@ -107,13 +103,14 @@ def get_board():
     Advice.review_df = review_df
     star_count = analyze_star_count(business_id)
     business_rank = get_business_rank_in_category(business_id,business_df)
-
+    positive_num,_,_ = analyze_reviews_for_business(review_df)
 
     res = {
         'business_details': business_df[business_df['business_id'] == business_id].to_dict(orient='records')[0],
         'reviews': review_df.to_dict(orient='records'),
         'star_count': star_count.to_dict(orient='records'),
-        'business_rank': int(business_rank)
+        'business_rank': int(business_rank),
+        'positive_reviews_count':int(positive_num)
     }
 
     json_res = jsonify(res)

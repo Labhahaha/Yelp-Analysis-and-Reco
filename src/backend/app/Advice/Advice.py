@@ -1,19 +1,8 @@
 from flask import Blueprint, jsonify
 import json
 import requests
-import os
-from openai import OpenAI
 from .Sentiment import analyze_reviews_for_business
-# from openai import OpenAI
-#
-#
-# os.environ["http_proxy"] = "http://localhost:7890"
-# os.environ["https_proxy"] = "http://localhost:7890"
-#
-#
-# client = OpenAI(
-#     api_key="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"
-# )
+
 def get_access_token():
     url = "https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=4qY7CsNN4WsWWfMAj45dCZV4&client_secret=8yziqhq6wQUo5VcGKo1bRxl0jXhvxiMe"
 
@@ -101,23 +90,8 @@ def analyze_negative_reviews(review_df):
     negative_reviews_text = negative_reviews['rev_text'].tolist()
 
     suggestions = get_api_response("\n".join(negative_reviews_text))
-    # 调用 OpenAI API
-    # input_text = "\n".join(negative_reviews_text)
-    #
-    # # 调用 OpenAI GPT-3.5 API 进行分析
-    # chat_completion = client.chat.completions.create(
-    #     messages=[
-    #         {
-    #             "role": "user",
-    #             "content": f"我是一名商家，以下是我最近得到的差评，请你分析并从中提取信息,给我列出五条经营建议，只需要返回建议内容：【{input_text}】。"
-    #         }
-    #     ],
-    #     model="gpt-3.5-turbo",
-    # )
-    # # 提取 API 响应中的文本部分作为改进建议
-    # suggestions = chat_completion.choices[0].message.content
-
     return suggestions
+
 @advice_blue.route('/get_advice')
 def get_advice():
     global business_df, review_df
