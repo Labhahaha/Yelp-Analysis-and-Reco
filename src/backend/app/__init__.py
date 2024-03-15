@@ -4,6 +4,8 @@ from .DataAnalyse import business_blue,users_blue,checkin_blue,comprehensive_blu
 from .Recommendation import recommend_blue
 from .Search import search_blue
 from .Friends import friends_blue
+from .Login import login_blue
+from .Advice import boards_blue
 
 def create_app(config):
     app = Flask(__name__)
@@ -18,6 +20,8 @@ def create_app(config):
     app.register_blueprint(recommend_blue, url_prefix='/recommend')
     app.register_blueprint(search_blue, url_prefix='/search')
     app.register_blueprint(friends_blue, url_prefix='/friends')
+    app.register_blueprint(login_blue, url_prefix='/login')
+    app.register_blueprint(boards_blue, url_prefix='/boards')
 
 
     return app
