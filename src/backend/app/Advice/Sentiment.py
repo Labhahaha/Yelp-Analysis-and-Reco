@@ -17,7 +17,7 @@ def sentiment_predict(texts):
         sentiment.load_state_dict(torch.load('config/model/sentiment.pt'))
         sentiment.to(device)
 
-    encoded_batch = QueryBased.tokenizer.batch_encode_plus(texts, add_special_tokens=True, return_tensors='pt', padding=True).to(device)
+    encoded_batch = QueryBased.tokenizer.batch_encode_plus(texts, add_special_tokens=True, return_tensors='pt', padding=True, truncation=True, max_length=512).to(device)
     with torch.no_grad():
         predictions = sentiment(encoded_batch)
         probability = torch.softmax(predictions, dim=1)
@@ -28,7 +28,7 @@ def sentiment_predict(texts):
 
     result_df = pd.DataFrame({
         'text': texts,
-        'predicted_class': predicted_class.cpu().numpy(),
+        'sentiment': predicted_class.cpu().numpy(),
         'predicted_probability': predicted_probability.cpu().numpy()
     })
     return result_df

@@ -26,7 +26,7 @@ def get_businesses_in_district(business_df, district_ids):
 # 示例用法
 def location_based_list(user_location,business_df,k=36):
     business_df = find_business_districts(business_df,n_clusters=10)
-    top_k_districts = top_k_districts_by_orders(business_df, 2)
+    top_k_districts = top_k_districts_by_orders(business_df, 4)
     businesses_in_district = get_businesses_in_district(business_df,top_k_districts)
     businesses_in_district = businesses_in_district.copy()
     businesses_in_district['distance'] = businesses_in_district.apply(lambda row: cal_distance(user_location, [row['longitude'], row['latitude']]), axis=1)

@@ -13,7 +13,7 @@ def model_init():
 
 def encode_texts(texts):
     # texts 是一个包含搜索查询和商业文本的列表
-    encoded_batch = tokenizer.batch_encode_plus(texts, add_special_tokens=True, return_tensors='pt', padding=True, truncation=True).to(device)
+    encoded_batch = tokenizer.batch_encode_plus(texts, add_special_tokens=True, return_tensors='pt', padding=True, truncation=True, max_length=512).to(device)
     with torch.no_grad():
         vectors = model(**encoded_batch).last_hidden_state.mean(dim=1)
         query_vec = vectors[0].unsqueeze(0)

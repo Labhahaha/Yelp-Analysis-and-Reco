@@ -5,6 +5,7 @@ from scipy.spatial.distance import euclidean
 from sklearn.preprocessing import StandardScaler
 from sqlalchemy import text
 from ..DataAnalyse.SQLSession import get_session, toDataFrame
+from ..Recommendation import Recommend
 from joblib import load
 
 friends_blue = Blueprint('friends', __name__)
@@ -17,8 +18,8 @@ def get_friends_of_friends(user_id):
         query = text(f"SELECT user_friends From users WHERE user_id = '{user_id}'")
         df = session.execute(query)
         df = toDataFrame(df)
-    if df.size == 0:
-        return None
+        if df['user_friends'][0]=='None':return []
+
     friend_ids = tuple(df['user_friends'][0].split(', '))
 
     # 得到好友的好友
@@ -45,7 +46,7 @@ def get_review_same_business(user_id):
         df = session.execute(query)
         df = toDataFrame(df)
     if df.size == 0:
-        return None
+        return []
     review_same_business = df['user_id'].tolist()
 
     # 查询用户的好友
@@ -68,7 +69,7 @@ def find_candidate_set(user_id):
     friends_of_friends_ids = get_friends_of_friends(user_id)
     review_same_business_ids = get_review_same_business(user_id)
     candidate_set_ids = list(set(friends_of_friends_ids) | set(review_same_business_ids))
-    candidate_set_ids = tuple(random.sample(candidate_set_ids, int(len(candidate_set_ids)*0.1)))
+    candidate_set_ids = tuple(random.sample(candidate_set_ids, min(1000,len(candidate_set_ids))))
     # 得到候选集
     with get_session() as session:
         query = text(f"SELECT * FROM users WHERE user_id in {candidate_set_ids}")
@@ -95,6 +96,7 @@ def get_user_feature(user_id):
 def recommend_friends():
     user_id = request.args.get("user_id")
     k = 25
+    user_id = Recommend.user_id
     # 归一化、主成分分析和kmeans
     scaler = StandardScaler()
     pca = load(f'config/model/pca10.joblib')

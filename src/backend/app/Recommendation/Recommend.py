@@ -6,7 +6,7 @@ from ..utils import get_business_by_city, cal_distance,location_init
 from .CollaborativeFiltering import CollaborativeFiltering
 from .QueryBased import match_rating
 from .LocationBased import location_based_list
-
+from ..Advice.Sentiment import sentiment_predict
 recommend_blue = Blueprint('recommend_blue', __name__)
 business_df = None
 review_df = None
@@ -16,7 +16,7 @@ user_location = None
 user_id = None
 
 
-@recommend_blue.route('/recommend')
+@recommend_blue.route('/')
 def get_recommendations(p_query=None):
     global business_df, review_df, city, last_city, user_location, user_id
     p_user_id = request.args.get('user_id')
@@ -45,27 +45,27 @@ def get_recommendations(p_query=None):
 
     # 基于查询的推荐
     if query is not None:
-        candidate_set3 = get_query_based_candidate_set(query, business_df, 36)
+        candidate_set3 = get_query_based_candidate_set(query, business_df, 72)
     else:
         candidate_set3 = None
 
     # 基于协同过滤的推荐
     if user_id is not None:
-        candidate_set1 = get_collaborative_filtering_candidate_set(user_id, business_df, 36)
+        candidate_set1 = get_collaborative_filtering_candidate_set(user_id, business_df, 72)
     else:
         candidate_set1 = None
 
     # 基于用户位置的推荐
     if user_location is not None:
-        candidate_set2 = get_location_based_candidate_set(user_location, business_df, 36)
+        candidate_set2 = get_location_based_candidate_set(user_location, business_df, 72)
     else:
         candidate_set2 = None
 
     # 基于评价和单量的候选集的推荐
-    candidate_set4 = get_alternate_set(business_df, 36)
+    candidate_set4 = get_alternate_set(business_df, 72)
 
     # 候选集融合和过滤
-    fused_candidate = fuse_candidate_set(candidate_set1, candidate_set2, candidate_set3, candidate_set4)
+    fused_candidate = fuse_candidate_set(candidate_set1, candidate_set2, candidate_set3, candidate_set4,72)
 
     # 候选集重排序
     recommend_list = re_sort(fused_candidate)
@@ -78,6 +78,7 @@ def get_recommendations(p_query=None):
 def get_collaborative_filtering_candidate_set(user_id, business_df, k):
     rating_list = CollaborativeFiltering(user_id, pd.DataFrame(business_df['business_id']))
     rating_list = pd.merge(business_df, rating_list, left_on='business_id', right_on='business_id')
+    rating_list = rating_list[rating_list['rating']>4.0]
     top_k_recommendations = rating_list.sort_values(by='rating', ascending=False).head(k)
     print(top_k_recommendations[['business_id', 'name', 'rating']])
     return top_k_recommendations['business_id']
@@ -118,16 +119,19 @@ def get_alternate_set(business_df, k):
     return top_k_recommendations['business_id']
 
 
-def fuse_candidate_set(candidate_set1, candidate_set2, candidate_set3, candidate_set4):
+def fuse_candidate_set(candidate_set1, candidate_set2, candidate_set3, candidate_set4, k=72):
     if candidate_set3 is not None:
         res = candidate_set3
-    elif candidate_set1 is not None:
-        res = candidate_set1
-    elif candidate_set2 is not None:
-        res = candidate_set2
+        return res
     else:
-        res = candidate_set4
-    return res
+        if candidate_set1 is not None:
+            res = candidate_set1
+            if res.shape[0]<k:
+                if candidate_set2 is not None:
+                    res = pd.concat([res, candidate_set2.head(k-res.shape[0])], axis=0)
+                if res.shape[0] < k:
+                    res = pd.concat([res, candidate_set4.head(k-res.shape[0])], axis=0)
+            return res
 
 
 def re_sort(fused_candidate):
@@ -154,9 +158,15 @@ def get_review_by_business(business):
 @recommend_blue.route('/details')
 def getBusinessDetails():
     business_id = request.args.get('business_id')
+    tmp_business_df = business_df[business_df['business_id'] == business_id]
+    tmp_review_df = review_df[review_df['rev_business_id'] == business_id]
+    tmp_review_df = tmp_review_df.reset_index(drop=True)
+    texts = tmp_review_df['rev_text'].values.tolist()
+    sentiments = sentiment_predict(texts)[['sentiment','predicted_probability']]
+    tmp_review_df = pd.concat([tmp_review_df, sentiments],axis=1)
     res = {
-        'business': business_df[business_df['business_id'] == business_id].to_dict(orient='records')[0],
-        'review': review_df[review_df['rev_business_id'] == business_id].to_dict(orient='records'),
+        'business': tmp_business_df.to_dict(orient='records')[0],
+        'review': tmp_review_df.to_dict(orient='records'),
     }
     res = jsonify(res)
     return res
