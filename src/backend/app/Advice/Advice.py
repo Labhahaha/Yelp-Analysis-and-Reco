@@ -46,9 +46,9 @@ def get_api_response(text):
 
     response = requests.request("POST", url, headers=headers, data=payload)
 
-    print(response.text)
+    response_text = json.loads(response.text).get("result")
 
-    return response.text
+    return response_text
 
 advice_blue = Blueprint('advice', __name__)
 
