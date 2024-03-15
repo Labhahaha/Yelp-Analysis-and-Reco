@@ -92,12 +92,12 @@ def recommend_friends():
                 'user_compliment_cool', 'user_compliment_funny', 'user_compliment_writer', 'user_compliment_photos']
 
     candidate_set_df = find_candidate_set(user_id)
-    candidate_set_feature_scaled = scaler.fit_transform(candidate_set_df[features_column].values)
+    candidate_set_feature_scaled = scaler.fit_transform(candidate_set_df[features_column])
     candidate_set_feature_pca = pca.transform(candidate_set_feature_scaled)
     cluster_ids = kmeans.predict(candidate_set_feature_pca)
 
     user = get_user_feature(user_id)
-    user_feature_scaled = scaler.transform(user[features_column].values)
+    user_feature_scaled = scaler.transform(user[features_column])
     user_feature_pca = pca.transform(user_feature_scaled)
     user_cluster_id = kmeans.predict(user_feature_pca)[0]
 
@@ -109,7 +109,7 @@ def recommend_friends():
             distances.append((idx, distance))
     # 根据距离找到距离最近的10个数据点
     distances.sort(key=lambda x: x[1])  # 按距离升序排序
-    count = 32
+    count = 36
     nearest = distances[:min(count, len(cluster_ids))]  # 获取前10个距离最近的数据点的索引和距离
     nearest_list = []
     for n in nearest:
