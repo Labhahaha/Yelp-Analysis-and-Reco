@@ -20,7 +20,6 @@ def filter_by_distance(filter_condition, df):
     return filter_df
 
 
-
 def filter_by_stars(filter_condition,df):
     if filter_condition == "five_stars":
         filter_df = df[df["stars"] == 5]

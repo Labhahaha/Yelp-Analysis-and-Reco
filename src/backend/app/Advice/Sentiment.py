@@ -45,6 +45,17 @@ class Sentiment(nn.Module):
         cls_hidden = hidden[:, 0, :]
         prediction = self.fc(torch.tanh(cls_hidden))
         return prediction
+def analyze_reviews_for_business(reviews_df):
+    # 获取当前business_id下的所有评论文本
+    review_texts = reviews_df['rev_text'].tolist()
+    # 调用sentiment_predict函数进行情感分析
+    result_df = sentiment_predict(review_texts)
+    # 统计评论数量
+    positive_reviews_count = len(result_df[result_df['sentiment'] == 1])
+    negative_reviews_count = len(result_df[result_df['sentiment'] == 0])
+    normal_reviews_count = len(result_df[result_df['sentiment'] == 2])
+    return positive_reviews_count,negative_reviews_count,normal_reviews_count
+
 
 # def sentiment_predict(texts):
 #     global sentiment

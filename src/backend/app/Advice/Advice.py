@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify
 import os
 from openai import OpenAI
-
+from .Sentiment import analyze_reviews_for_business
 
 os.environ["http_proxy"] = "http://localhost:7890"
 os.environ["https_proxy"] = "http://localhost:7890"
@@ -76,10 +76,12 @@ def get_advice():
 
     negative_reviews_advice = analyze_negative_reviews(review_df)
 
+    positive_reviews_count,negative_reviews_count,normal_reviews_count = analyze_reviews_for_business(review_df)
     res = {
         'common_attributes': common_attributes,
         'top_five_businesses': top_five_businesses.to_dict(orient='records'),
-        'negative_reviews_advice': negative_reviews_advice.to_dict(orient='records')
+        'negative_reviews_advice': negative_reviews_advice.to_dict(orient='records'),
+        'reviews_count': [int(positive_reviews_count), int(negative_reviews_count), int(normal_reviews_count)],
     }
 
     json_res = jsonify(res)

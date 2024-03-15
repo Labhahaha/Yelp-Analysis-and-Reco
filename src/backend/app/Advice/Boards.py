@@ -1,7 +1,7 @@
 from flask import request, Blueprint, jsonify
 from sqlalchemy import text
 from ..Recommendation.Recommend import get_business_by_city
-from .Sentiment import sentiment_predict
+
 from  ..DataAnalyse.SQLSession import toJSON,get_session,toDataFrame
 from . import Advice
 boards_blue = Blueprint('boards', __name__)
@@ -85,19 +85,6 @@ def analyze_star_count(business_id):
         res = toDataFrame(res)
     return res
 
-def analyze_reviews_for_business(business_id):
-    # 获取当前business_id下的所有评论文本
-    reviews_df = get_review_by_business(business_id)
-    review_texts = reviews_df['rev_text'].tolist()
-
-    # 调用sentiment_predict函数进行情感分析
-    result_df = sentiment_predict(review_texts)
-
-    # 统计好评数量
-    positive_reviews_count = len(result_df[result_df['sentiment'] == 1])
-
-    return positive_reviews_count
-
 # 获取特定business_id下的所有评论文本
 def get_review_by_business(business_id):
     with get_session() as session:
@@ -110,24 +97,18 @@ def get_review_by_business(business_id):
 def get_board():
     # global business_df, review_df
     business_id = 'Pw77mNz6cso9quMp2NwaiA'
-
     business_df = get_business_by_city(city='Abington')
-
     review_df = get_review_by_business(business_id)
+
     Advice.review_df = review_df
-
     star_count = analyze_star_count(business_id)
-
     business_rank = get_business_rank_in_category(business_id,business_df)
-
-    positive_reviews_count = analyze_reviews_for_business(business_id)
 
 
     res = {
         'business_details': business_df[business_df['business_id'] == business_id].to_dict(orient='records')[0],
         'reviews': review_df.to_dict(orient='records'),
         'star_count': star_count.to_dict(orient='records'),
-        'positive_reviews_count': int(positive_reviews_count),
         'business_rank': int(business_rank)
     }
 
