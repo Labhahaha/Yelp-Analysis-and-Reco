@@ -17,18 +17,21 @@ user_id = None
 
 
 @recommend_blue.route('/recommend')
-def get_recommendations():
+def get_recommendations(p_query=None):
     global business_df, review_df, city, last_city, user_location, user_id
     p_user_id = request.args.get('user_id')
     p_city = request.args.get('city')
-    p_user_location = json.loads(request.args.get('user_location'))
+    p_user_location = request.args.get('user_location')
 
     query = request.args.get('query')
+    if p_user_id is not None:
+        query = p_query
 
     # 更新参数
     if p_user_id is not None:
         user_id = p_user_id
     if p_user_location is not None:
+        p_user_location = json.loads(p_user_location)
         user_location = p_user_location
     if p_city is not None:
         city = p_city
@@ -103,6 +106,7 @@ def get_alternate_set(business_df, k):
             business_df['review_count'].max() - business_df['review_count'].min())
     # 计算加权得分，假设评分占比为 0.7，评价数量占比为 0.3
     weighted_score = 0.7 * normalized_stars + 0.3 * normalized_review_count
+    business_df = business_df.copy()
     # 添加加权得分列
     business_df['weighted_score'] = weighted_score
     # 根据加权得分降序排序，选择前 k 个商家作为候选集

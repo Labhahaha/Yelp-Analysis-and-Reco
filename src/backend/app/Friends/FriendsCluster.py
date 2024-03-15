@@ -7,15 +7,16 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
 from datetime import datetime
-from joblib import dump, load
+from joblib import dump
 import random
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sklearn.decomposition import PCA
-
+from contextlib import contextmanager
 engine = None
 Session = None
-from contextlib import contextmanager
+
+
 @contextmanager
 def get_session():
     if Session is None:
@@ -25,10 +26,14 @@ def get_session():
         yield session
     finally:
         session.close()
+
+
 def toDataFrame(res):
     data = [row._asdict() for row in res]
     df = pd.DataFrame(data)
     return df
+
+
 def db_init(db_url):
     global engine, Session
     if engine is None:
@@ -37,6 +42,8 @@ def db_init(db_url):
         # 创建会话工厂
         Session = sessionmaker(bind=engine)
 
+
+# 使用kmeans对用户进行聚类
 def userClassification():
     db_init('mysql+pymysql://root:123456@172.16.0.70:3306/yelp')
     with get_session() as session:
@@ -49,11 +56,10 @@ def userClassification():
                      """)
         df = session.execute(query)
         df = toDataFrame(df)
-
+    # 处理特征
     df['user_friends_count'] = df['user_friends'].str.count(', ')
     df = df.drop(columns=['user_friends'])
     df['user_average_stars'] = df['user_average_stars'].astype(int)
-    # print(df['user_average_stars'])
 
     # 标准化数据
     scaler = StandardScaler()
@@ -61,18 +67,20 @@ def userClassification():
                 'user_cool', 'user_fans', 'user_compliment_hot', 'user_compliment_more', 'user_compliment_profile',
                 'user_compliment_cute', 'user_compliment_list', 'user_compliment_note', 'user_compliment_plain',
                 'user_compliment_cool', 'user_compliment_funny', 'user_compliment_writer', 'user_compliment_photos']
-
     df[features] = scaler.fit_transform(df[features])
+    # 主成分分析法降维
     pca = PCA(n_components=10, random_state=42)  # 指定降维后的维度
     pca.fit(df[features])
     pca_feature = pca.transform(df[features])
     dump(pca, f'pca10.joblib')
+    # 对不同的k值训练模型
     for k in [35, 40, 45, 50]:
         print(k)
         kmeans = KMeans(n_clusters=k, init='k-means++', max_iter=300, n_init=10, random_state=42)
         kmeans.fit(pca_feature)
         dump(kmeans, f'D:/2024shixun/ProjectCode/Yelp-Analysis-and-Reco/src/backend/config/model/kmeans_model{k}.joblib')
 
+        # 随机取样10000个
         sampled_indices = np.random.choice(pca_feature.shape[0], 10000, replace=False)
         sampled_data = pca_feature[sampled_indices]
 
@@ -82,15 +90,15 @@ def userClassification():
 
         # 绘制聚类结果
         plt.scatter(df_tsne[:, 0], df_tsne[:, 1], c=kmeans.labels_[sampled_indices], cmap='viridis', alpha=0.5,s = 5)
-        # plt.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], marker='x', s=10, c='red',
-        #             label='Centroids')
         plt.title('KMeans Clustering with t-SNE (Sampled 10000 points)')
         plt.legend()
         plt.show()
 
 
-
 userClassification()
+
+
+# 计算准确率
 def calculate_accuracy(kmeans_model, df, X, sample_size=10):
     predictions = kmeans_model.predict(X)
     df['cluster'] = predictions
@@ -116,8 +124,6 @@ def calculate_accuracy(kmeans_model, df, X, sample_size=10):
 
     # 返回平均准确率
     return sum(user_accuracies) / len(user_accuracies) if user_accuracies else 0
-
-
 
 
 def accuraciesTestRun():
@@ -150,10 +156,8 @@ def accuraciesTestRun():
 def recommendRun(user_id, X, n_clusters=50):
     kmeans = KMeans(n_clusters=n_clusters, random_state=0)
     kmeans.fit(X)
-
     # 预测簇标签
     clusters = kmeans.predict(X)
-
     # 创建一个字典，以簇标签为键，以属于该簇的用户ID列表为值
     clustered_users = {}
     for cluster_id in clusters:
