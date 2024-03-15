@@ -2,7 +2,7 @@ import pandas as pd
 from flask import Blueprint, request, json, jsonify
 from sqlalchemy import text
 from ..DataAnalyse.SQLSession import get_session, toDataFrame
-from ..utils import get_business_by_city, cal_distance
+from ..utils import get_business_by_city, cal_distance,location_init
 from .CollaborativeFiltering import CollaborativeFiltering
 from .QueryBased import match_rating
 from .LocationBased import location_based_list
@@ -40,6 +40,7 @@ def get_recommendations(p_query=None):
     if city != last_city:
         last_city = city
         business_df = get_business_by_city(city)
+        user_location = location_init(business_df)
         review_df = get_review_by_business(tuple(business_df['business_id'].values))
 
     # 基于查询的推荐
@@ -85,6 +86,8 @@ def get_collaborative_filtering_candidate_set(user_id, business_df, k):
 def get_location_based_candidate_set(user_location, business_df, k):
     top_k_recommendations = location_based_list(user_location, business_df, k)
     print(top_k_recommendations[['business_id', 'name', 'district', 'distance']])
+    if top_k_recommendations.empty:
+        return None
     return top_k_recommendations['business_id']
 
 
@@ -157,3 +160,4 @@ def getBusinessDetails():
     }
     res = jsonify(res)
     return res
+
