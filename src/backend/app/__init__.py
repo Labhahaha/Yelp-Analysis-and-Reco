@@ -5,6 +5,7 @@ from .Recommendation import recommend_blue
 from .Search import search_blue
 from .Friends import friends_blue
 from .Login import login_blue
+from .Advice import boards_blue,advice_blue
 
 
 def create_app(config):
@@ -21,6 +22,8 @@ def create_app(config):
     app.register_blueprint(search_blue, url_prefix='/search')
     app.register_blueprint(friends_blue, url_prefix='/friends')
     app.register_blueprint(login_blue, url_prefix='/login')
+    app.register_blueprint(boards_blue, url_prefix='/boards')
+    app.register_blueprint(advice_blue, url_prefix='/advice')
 
 
     return app
