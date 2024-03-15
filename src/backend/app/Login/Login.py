@@ -1,18 +1,18 @@
-from flask import request, Blueprint
-
-user_id =  None
-business_id = None
-
+from flask import request, Blueprint,jsonify
+from ..Recommendation import Recommend
 login_blue = Blueprint('login', __name__)
 
-@login_blue.route('/login')
+@login_blue.route('/')
 def login():
+    map_list = {
+        'Buton':'mgdpBWceTxl_0ffDOoauSQ'
+    }
     login_type = request.args.get('type')
+    name = request.args.get('name')
     if login_type == "user":
-        pass
-        # user_id = request.args.get('id')
-        # user_id = ''
+        Recommend.user_id = map_list[name]
+        return jsonify({'status':'success'})
     elif login_type == "business":
-        pass
-        # business_id = request.args.get('id')
-    return 'login success'
+        Recommend.user_id = map_list[name]
+        return jsonify({'status':'success'})
+
