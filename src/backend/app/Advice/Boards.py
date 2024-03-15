@@ -94,7 +94,7 @@ def analyze_reviews_for_business(business_id):
     result_df = sentiment_predict(review_texts)
 
     # 统计好评数量
-    positive_reviews_count = len(result_df[result_df['predicted_class'] == 1])
+    positive_reviews_count = len(result_df[result_df['sentiment'] == 1])
 
     return positive_reviews_count
 

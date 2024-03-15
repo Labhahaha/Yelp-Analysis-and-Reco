@@ -5,7 +5,8 @@ login_blue = Blueprint('login', __name__)
 @login_blue.route('/')
 def login():
     map_list = {
-        'Buton':'mgdpBWceTxl_0ffDOoauSQ'
+        'Buton':'mgdpBWceTxl_0ffDOoauSQ',
+        'Shari':'gmwE4HCfTysGMGT-jCuaPg'
     }
     login_type = request.args.get('type')
     name = request.args.get('name')

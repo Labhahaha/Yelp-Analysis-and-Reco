@@ -57,7 +57,7 @@ def analyze_negative_reviews(review_df):
         messages=[
             {
                 "role": "user",
-                "content": f"我是一名商家，以下是我最近得到的差评，请你分析并从中提取信息,给我列出五条经营建议，只需要返回建议内容：【{input_text}】。"
+                "content": f"我是一名商家，以下是我最近得到的差评，请你分析并从中提取信息,给我列出五条经营建议，只需要返回建议内容：[{input_text}]。"
             }
         ],
         model="gpt-3.5-turbo",
