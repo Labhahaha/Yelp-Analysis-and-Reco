@@ -3,7 +3,7 @@ from sklearn.cluster import KMeans
 from ..utils import cal_distance
 
 '''
-使用KMeans聚类，实现基于位置和商圈
+使用KMeans聚类，实现基于位置和商圈的推荐
 '''
 #使用 KMeans 聚类将商家按照经纬度聚成若干类，这些类可以代表商圈或区域
 def find_business_districts(business_df, n_clusters=10):

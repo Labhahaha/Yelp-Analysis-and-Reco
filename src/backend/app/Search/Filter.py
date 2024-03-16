@@ -1,7 +1,5 @@
 from flask import Blueprint
 
-filter_blue = Blueprint('filter', __name__)
-
 def filter_by_distance(filter_condition, df):
     filter_df = df
     if filter_condition == "(0,1)":

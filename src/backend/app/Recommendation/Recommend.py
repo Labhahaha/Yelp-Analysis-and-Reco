@@ -77,7 +77,7 @@ def get_recommendations(p_query=None):
     recommend_list = re_sort(fused_candidate)
 
     # 完善推荐集的详细信息
-    recommend_list_with_info = add_Info(recommend_list, business_df)
+    recommend_list_with_info = add_info(recommend_list, business_df)
 
     return recommend_list_with_info.to_json(orient='records')
 
@@ -136,7 +136,7 @@ def get_alternate_set(business_df, k):
     return top_k_recommendations['business_id']
 
 
-# 候选集融合和过滤
+# 候选集的分级融合和过滤
 def fuse_candidate_set(collaborative_candidate_set, location_candidate_set, query_candidate_set,
                        alternate_candidate_set, k=72):
     # 若有查询结果则查询优先级最高，直接返回基于查询的候选集
@@ -174,21 +174,23 @@ def fuse_candidate_set(collaborative_candidate_set, location_candidate_set, quer
         return None
 
 
-# 候选集重排序
+# 候选集重排序(因无法获取用户实时选择的数据，故暂时无法训练模型进行重排，直接返回)
 def re_sort(fused_candidate):
     return fused_candidate
 
 
 # 根据business_id列表匹配详细信息
-def add_Info(fused_candidate, business_df):
+def add_info(fused_candidate, business_df):
     global user_location
+    # 匹配详细信息
     res = pd.merge(fused_candidate, business_df, how='left', on='business_id')
+    # 如果有用户位置则额外计算距离
     if user_location is not None:
-        res['distance'] = res.apply(lambda row: cal_distance(user_location, [row['longitude'], row['latitude']]),
-                                    axis=1)
+        res['distance'] = res.apply(lambda row: cal_distance(user_location, [row['longitude'], row['latitude']]),axis=1)
     return res
 
 
+# 根据商户获取其对应评论
 def get_review_by_business(business):
     with get_session() as session:
         query = text(f"select * from review where rev_business_id in {business}")
@@ -197,15 +199,19 @@ def get_review_by_business(business):
         return res
 
 
-# 根据business_id返回商户详细信息
+# 根据business_id返回商户详细信息，包含评论情感分析
 @recommend_blue.route('/details')
 def getBusinessDetails():
     business_id = request.args.get('business_id')
+    # 筛选商户信息
     tmp_business_df = business_df[business_df['business_id'] == business_id]
+    # 获取评论信息
     tmp_review_df = review_df[review_df['rev_business_id'] == business_id]
     tmp_review_df = tmp_review_df.reset_index(drop=True)
     texts = tmp_review_df['rev_text'].values.tolist()
+    # 进行情感分析预测
     sentiments = sentiment_predict(texts)[['sentiment', 'predicted_probability']]
+    # 整合数据返回列表
     tmp_review_df = pd.concat([tmp_review_df, sentiments], axis=1)
     res = {
         'business': tmp_business_df.to_dict(orient='records')[0],

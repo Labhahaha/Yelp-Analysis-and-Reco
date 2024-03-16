@@ -10,12 +10,14 @@ tokenizer = None
 model = None
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+
 # 初始化模型加载预训练权重
 def model_init():
     global model, tokenizer
     tokenizer = DistilBertTokenizer.from_pretrained('config/model/distilbert-base-uncased')
     model = DistilBertModel.from_pretrained('config/model/distilbert-base-uncased')
     model.to(device)
+
 
 # 编码文本获得文本语义嵌入
 def encode_texts(texts):
@@ -29,9 +31,11 @@ def encode_texts(texts):
         business_vecs = vectors[1:]
     return query_vec, business_vecs
 
+
 # 计算查询与商家信息prompt间的余弦相似度
 def cosine_similarity(a, b):
     return torch.nn.functional.cosine_similarity(a, b, dim=-1)
+
 
 # 计算查询与商家信息prompt间的匹配程度，进行基于搜索的推荐
 def match_rating(search_query, business_texts):
