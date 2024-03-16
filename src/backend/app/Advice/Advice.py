@@ -6,22 +6,25 @@ from .Sentiment import analyze_reviews_for_business
 reviews_count = None
 advice_blue = Blueprint('advice', __name__)
 
-def get_access_token():
-    url = "https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=4qY7CsNN4WsWWfMAj45dCZV4&client_secret=8yziqhq6wQUo5VcGKo1bRxl0jXhvxiMe"
-
-    payload = json.dumps("")
-    headers = {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-    }
-
-    response = requests.request("POST", url, headers=headers, data=payload)
-
-    return response.json().get("access_token")
+# def get_access_token():
+#     url = "https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=4qY7CsNN4WsWWfMAj45dCZV4&client_secret=8yziqhq6wQUo5VcGKo1bRxl0jXhvxiMe"
+#
+#     payload = json.dumps("")
+#     headers = {
+#         'Content-Type': 'application/json',
+#         'Accept': 'application/json'
+#     }
+#
+#     response = requests.request("POST", url, headers=headers, data=payload)
+#     print(response.json().get("access_token"))
+#
+#     return response.json().get("access_token")
 
 
 def get_api_response(text):
-    url = "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/completions?access_token=" + get_access_token()
+    access_token = "24.f4f83135009e271e1305896aea8fc217.2592000.1713149522.282335-56631651"
+    # access_token = get_access_token()
+    url = "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/completions?access_token=" + access_token
 
     payload = json.dumps({
         "messages": [
@@ -93,13 +96,11 @@ def analyze_negative_reviews(review_df):
 
 @advice_blue.route('/get_advice')
 def get_advice():
-    global business_df, review_df
+    global business_df, review_df, negative_reviews_advice
 
     common_attributes = get_common_attributes(business_df)
 
     top_five_businesses = get_top_five_businesses(business_df)
-
-    negative_reviews_advice = analyze_negative_reviews(review_df)
 
     res = {
         'common_attributes': common_attributes,

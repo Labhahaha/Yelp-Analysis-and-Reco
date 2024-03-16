@@ -1,9 +1,13 @@
 from flask import request, Blueprint, jsonify
+import requests,json
 from sqlalchemy import text
 from ..Recommendation.Recommend import get_business_by_city
 from  ..DataAnalyse.SQLSession import toJSON,get_session,toDataFrame
-from . import Advice
+from ..Advice import Advice
 from .Sentiment import analyze_reviews_for_business
+from threading import Thread
+
+
 boards_blue = Blueprint('boards', __name__)
 
 business_df = None
@@ -93,12 +97,57 @@ def get_review_by_business(business_id):
         res = toDataFrame(res)
         return res
 
+
+def get_api_response(text):
+    access_token = "24.f4f83135009e271e1305896aea8fc217.2592000.1713149522.282335-56631651"
+    # access_token = get_access_token()
+    url = "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/completions?access_token=" + access_token
+
+    payload = json.dumps({
+        "messages": [
+            {
+                "role": "user",
+                "content": f"我是一名餐厅商家，以下是我最近得到的差评，分析并从中提取关键信息,给我列出三条经营建议，让答案尽可能简短，只返回中文建议内容：{text}"
+            }
+        ],
+        "disable_search": False,
+        "enable_citation": False
+    })
+    headers = {
+        'Content-Type': 'application/json'
+    }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+
+    response_text = json.loads(response.text).get("result")
+
+    return response_text
+
+def analyze_negative_reviews(review_df):
+    # 筛选出 rev_stars 为 1 的评论
+    negative_reviews = review_df[(review_df['rev_stars'] == 1)]
+
+    # 提取评论文本
+    negative_reviews_text = negative_reviews['rev_text'].tolist()
+
+    suggestions = get_api_response("\n".join(negative_reviews_text))
+
+    Advice.negative_reviews_advice = suggestions
+
+    return suggestions
+
+
 @boards_blue.route('/get_board')
 def get_board():
     # global business_df, review_df
+
     business_id = 'Pw77mNz6cso9quMp2NwaiA'
     business_df = get_business_by_city(city='Abington')
     review_df = get_review_by_business(business_id)
+
+    #开启线程后台请求文心一言回复
+    api_response_thread = Thread(target=analyze_negative_reviews, args=(review_df,))
+    api_response_thread.start()
 
     Advice.review_df = review_df
     star_count = analyze_star_count(business_id)
