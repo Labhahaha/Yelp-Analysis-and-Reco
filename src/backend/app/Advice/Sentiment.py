@@ -74,6 +74,8 @@ def analyze_reviews_for_business(reviews_df):
     normal_reviews_count = len(result_df[result_df['sentiment'] == 2])
     return positive_reviews_count, negative_reviews_count, normal_reviews_count
 
+
+'''模型共用的版本的实现'''
 # def sentiment_predict(texts):
 #     global sentiment
 #     if QueryBased.model is None or QueryBased.tokenizer is None:

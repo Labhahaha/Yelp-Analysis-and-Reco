@@ -174,7 +174,7 @@ def fuse_candidate_set(collaborative_candidate_set, location_candidate_set, quer
         return None
 
 
-# 候选集重排序(因无法获取用户实时选择的数据，故暂时无法训练模型进行重排，直接返回)
+# 候选集重排序(因缺少用户行为和反馈数据，故暂时无法训练模型进行重排，直接返回)
 def re_sort(fused_candidate):
     return fused_candidate
 
