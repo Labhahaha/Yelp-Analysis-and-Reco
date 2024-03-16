@@ -25,7 +25,7 @@ def filter_by_stars(filter_condition,df):
 
     return filter_df
 
-def filter(df,filter_type,filter_conditions):
+def filter(df,filter_conditions):
 
     result_df = df
 
