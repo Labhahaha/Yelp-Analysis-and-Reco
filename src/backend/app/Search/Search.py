@@ -20,16 +20,15 @@ def search():
     recommend_df = pd.read_json(get_recommendations(),orient='records')
 
     # 根据条件进行排序
-    if sort is not None:
+    if sortBy is not None and sortBy != '':
         recommend_df = sort(recommend_df, sortBy)
 
     # 处理筛选条件
     filter_conditions = {}
 
-    if star_condition:
+    if star_condition and star_condition != '':
         filter_conditions['stars'] = star_condition
-
-    if distance_condition:
+    if distance_condition and distance_condition != '':
         filter_conditions['distance'] = distance_condition
 
     # 根据条件进行排序
