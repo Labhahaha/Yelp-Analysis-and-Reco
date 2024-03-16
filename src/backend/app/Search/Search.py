@@ -13,8 +13,8 @@ def search():
     query = request.args.get('query')
     # 获取排序和筛选相关参数
     sortBy = request.args.get('sortBy')
-    filter_type = request.args.get('filter_type')
-    filter_condition = request.args.get("filter_condition")
+    star_condition = request.args.get('star_condition')
+    distance_condition = request.args.get('distance_condition')
 
     # 调用推荐算法，实现基于搜索的推荐
     recommend_df = pd.read_json(get_recommendations(),orient='records')
@@ -23,9 +23,17 @@ def search():
     if sort is not None:
         recommend_df = sort(recommend_df, sortBy)
 
+    # 处理筛选条件
+    filter_conditions = {}
+
+    if star_condition:
+        filter_conditions['stars'] = star_condition
+
+    if distance_condition:
+        filter_conditions['distance'] = distance_condition
+
     # 根据条件进行排序
-    if filter_type is not None and filter_condition is not None:
-        recommend_df = filter(recommend_df, filter_type, filter_condition)
+    recommend_df = filter(recommend_df, filter_conditions)
 
     # 返回最终搜索结果
     json_res = recommend_df.to_json(orient='records')
