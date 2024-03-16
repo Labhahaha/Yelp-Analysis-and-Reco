@@ -14,6 +14,5 @@ def login():
         Recommend.user_id = map_list[name]
         return jsonify({'status':'success'})
     elif login_type == "business":
-        Recommend.user_id = map_list[name]
         return jsonify({'status':'success'})
 

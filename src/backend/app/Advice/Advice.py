@@ -13,7 +13,6 @@ def get_access_token():
     }
 
     response = requests.request("POST", url, headers=headers, data=payload)
-    print(response.json().get("access_token"))
 
     return response.json().get("access_token")
 
