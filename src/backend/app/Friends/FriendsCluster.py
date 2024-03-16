@@ -45,15 +45,9 @@ def db_init(db_url):
 
 # 使用kmeans对用户进行聚类
 def userClassification():
-    db_init('mysql+pymysql://root:123456@172.16.0.70:3306/yelp')
+    db_init('mysql+pymysql://root:123456@localhost:3306/yelp')
     with get_session() as session:
-        query = text(f"""
-                     SELECT user_friends, user_average_stars, user_review_count, user_useful, user_funny,
-                            user_cool, user_fans, user_compliment_hot, user_compliment_more, user_compliment_profile,
-                            user_compliment_cute, user_compliment_list, user_compliment_note, user_compliment_plain,
-                            user_compliment_cool, user_compliment_funny, user_compliment_writer,user_compliment_photos
-                     FROM users
-                     """)
+        query = text(f"SELECT * FROM users")
         df = session.execute(query)
         df = toDataFrame(df)
     # 处理特征
@@ -61,12 +55,14 @@ def userClassification():
     df = df.drop(columns=['user_friends'])
     df['user_average_stars'] = df['user_average_stars'].astype(int)
 
-    # 标准化数据
-    scaler = StandardScaler()
+    # 定义特征参数
     features = ['user_friends_count', 'user_average_stars', 'user_review_count', 'user_useful', 'user_funny',
                 'user_cool', 'user_fans', 'user_compliment_hot', 'user_compliment_more', 'user_compliment_profile',
                 'user_compliment_cute', 'user_compliment_list', 'user_compliment_note', 'user_compliment_plain',
                 'user_compliment_cool', 'user_compliment_funny', 'user_compliment_writer', 'user_compliment_photos']
+
+    # 归一化数据
+    scaler = StandardScaler()
     df[features] = scaler.fit_transform(df[features])
     # 主成分分析法降维
     pca = PCA(n_components=10, random_state=42)  # 指定降维后的维度
@@ -74,8 +70,8 @@ def userClassification():
     pca_feature = pca.transform(df[features])
     dump(pca, f'pca10.joblib')
     # 对不同的k值训练模型
-    for k in [35, 40, 45, 50]:
-        print(k)
+    for k in [10, 15, 25, 30, 35, 40, 45, 50, 100]:
+        print(f"开始训练模型：k={k}")
         kmeans = KMeans(n_clusters=k, init='k-means++', max_iter=300, n_init=10, random_state=42)
         kmeans.fit(pca_feature)
         dump(kmeans, f'D:/2024shixun/ProjectCode/Yelp-Analysis-and-Reco/src/backend/config/model/kmeans_model{k}.joblib')
@@ -84,13 +80,13 @@ def userClassification():
         sampled_indices = np.random.choice(pca_feature.shape[0], 10000, replace=False)
         sampled_data = pca_feature[sampled_indices]
 
-        # 使用 TSNE 进行降维
+        # 使用TSNE进行降维
         tsne = TSNE(n_components=2)
         df_tsne = tsne.fit_transform(sampled_data)
 
         # 绘制聚类结果
-        plt.scatter(df_tsne[:, 0], df_tsne[:, 1], c=kmeans.labels_[sampled_indices], cmap='viridis', alpha=0.5,s = 5)
-        plt.title('KMeans Clustering with t-SNE (Sampled 10000 points)')
+        plt.scatter(df_tsne[:, 0], df_tsne[:, 1], c=kmeans.labels_[sampled_indices], cmap='viridis', alpha=0.5, s=5)
+        plt.title('KMeans10000个样本点聚类图')
         plt.legend()
         plt.show()
 
@@ -111,7 +107,6 @@ def calculate_accuracy(kmeans_model, df, X, sample_size=10):
     for cluster_id, users in cluster_to_users.items():
         if len(users) <= 1:
             continue  # 如果簇中只有一个用户，则跳过
-
         # 随机选择用户，数量为sample_size或簇中用户数，取较小值
         sampled_users = random.sample(users, min(sample_size, len(users)))
 
@@ -126,6 +121,7 @@ def calculate_accuracy(kmeans_model, df, X, sample_size=10):
     return sum(user_accuracies) / len(user_accuracies) if user_accuracies else 0
 
 
+# 调用计算准确率的函数
 def accuraciesTestRun():
     # db_init(config.DATABASE_URL)
     with get_session() as session:
@@ -139,31 +135,18 @@ def accuraciesTestRun():
     df['user_yelping_since'] = pd.to_datetime(df['user_yelping_since'])
     df['user_yelping_days'] = (datetime.now() - df['user_yelping_since']).dt.days
     X = df.drop(columns=['user_id', 'user_friends', 'user_yelping_since']).values
-    print(1)
-    for k in [20, 30, 40, 50]:
+    for k in [10, 15, 20, 30, 40, 50, 100]:
         kmeans_model = joblib.load(f'kmeans_model{k}.joblib')
-        print(2)
         accuracy = calculate_accuracy(kmeans_model, df, X)
-        print(3)
         accuracy_results[k] = accuracy
-        print(f'Model with k={k}: Accuracy = {accuracy}')
+        print(f'k={k}：准确率为{accuracy}')
 
     # 找到准确率最高的模型
     best_k = max(accuracy_results, key=accuracy_results.get)
-    print(f'Model with k={best_k} has the highest accuracy of {accuracy_results[best_k]}')
+    print(f'k={best_k}准确率最高，准确率为{accuracy_results[best_k]}')
 
 
-def recommendRun(user_id, X, n_clusters=50):
-    kmeans = KMeans(n_clusters=n_clusters, random_state=0)
-    kmeans.fit(X)
-    # 预测簇标签
-    clusters = kmeans.predict(X)
-    # 创建一个字典，以簇标签为键，以属于该簇的用户ID列表为值
-    clustered_users = {}
-    for cluster_id in clusters:
-        if cluster_id not in clustered_users:
-            clustered_users[cluster_id] = []
-        clustered_users[cluster_id].append(user_id)
+
 
 
 
