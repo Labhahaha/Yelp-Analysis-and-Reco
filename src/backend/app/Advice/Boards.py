@@ -145,7 +145,7 @@ def get_board():
     business_df = get_business_by_city(city='Abington')
     review_df = get_review_by_business(business_id)
 
-    #开启线程后台请求文心一言回复
+    # 开启线程后台请求文心一言回复
     api_response_thread = Thread(target=analyze_negative_reviews, args=(review_df,))
     api_response_thread.start()
 

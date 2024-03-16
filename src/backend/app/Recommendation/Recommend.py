@@ -196,7 +196,7 @@ def get_review_by_business(business):
         query = text(f"select * from review where rev_business_id in {business}")
         res = session.execute(query)
         res = toDataFrame(res)
-        return res
+    return res
 
 
 # 根据business_id返回商户详细信息，包含评论情感分析

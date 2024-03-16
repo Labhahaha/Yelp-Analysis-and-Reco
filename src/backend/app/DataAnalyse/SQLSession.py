@@ -25,8 +25,10 @@ def get_session():
         raise Exception("Database not initialized. Call db_init() first.")
     session = Session()
     try:
+        # 创建会话
         yield session
     finally:
+        # 关闭会话
         session.close()
 
 
