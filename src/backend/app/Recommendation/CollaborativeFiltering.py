@@ -9,6 +9,7 @@ model_path = 'config/model/filter_model.pkl'
 model = dump.load(model_path)[1]
 reader = Reader(rating_scale=(1, 5))
 
+
 def model_train():
     #加载训练数据
     with get_session() as session:

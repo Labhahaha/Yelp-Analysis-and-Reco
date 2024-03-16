@@ -103,14 +103,14 @@ def get_board():
     Advice.review_df = review_df
     star_count = analyze_star_count(business_id)
     business_rank = get_business_rank_in_category(business_id,business_df)
-    positive_num,_,_ = analyze_reviews_for_business(review_df)
+    Advice.reviews_count = analyze_reviews_for_business(review_df)
 
     res = {
         'business_details': business_df[business_df['business_id'] == business_id].to_dict(orient='records')[0],
         'reviews': review_df.to_dict(orient='records'),
         'star_count': star_count.to_dict(orient='records'),
         'business_rank': int(business_rank),
-        'positive_reviews_count':int(positive_num)
+        'positive_reviews_count':int(Advice.reviews_count[0])
     }
 
     json_res = jsonify(res)

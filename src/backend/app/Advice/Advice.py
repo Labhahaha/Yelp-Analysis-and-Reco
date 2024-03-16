@@ -3,6 +3,9 @@ import json
 import requests
 from .Sentiment import analyze_reviews_for_business
 
+reviews_count = None
+advice_blue = Blueprint('advice', __name__)
+
 def get_access_token():
     url = "https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=4qY7CsNN4WsWWfMAj45dCZV4&client_secret=8yziqhq6wQUo5VcGKo1bRxl0jXhvxiMe"
 
@@ -24,7 +27,7 @@ def get_api_response(text):
         "messages": [
             {
                 "role": "user",
-                "content": f"我是一名餐厅商家，以下是我最近得到的差评，分析并从中提取关键信息,给我列出五条简洁的经营建议，只需返回中文建议内容：{text}"
+                "content": f"我是一名餐厅商家，以下是我最近得到的差评，分析并从中提取关键信息,给我列出三条经营建议，让答案尽可能简短，只需返回中文建议内容：{text}"
             }
         ],
         "disable_search": False,
@@ -39,9 +42,6 @@ def get_api_response(text):
     response_text = json.loads(response.text).get("result")
 
     return response_text
-
-advice_blue = Blueprint('advice', __name__)
-
 
 def get_top_five_businesses(business_df):
     # 根据综合评分降序排序，并取前五个商家
@@ -83,7 +83,7 @@ def get_common_attributes(business_df):
 
 def analyze_negative_reviews(review_df):
     # 筛选出 rev_stars 为 1 或 2 的评论
-    negative_reviews = review_df[(review_df['rev_stars'] == 1) | (review_df['rev_stars'] == 2)]
+    negative_reviews = review_df[(review_df['rev_stars'] == 1)]
 
     # 提取评论文本
     negative_reviews_text = negative_reviews['rev_text'].tolist()
@@ -101,12 +101,11 @@ def get_advice():
 
     negative_reviews_advice = analyze_negative_reviews(review_df)
 
-    positive_reviews_count,negative_reviews_count,normal_reviews_count = analyze_reviews_for_business(review_df)
     res = {
         'common_attributes': common_attributes,
         'top_five_businesses': top_five_businesses.to_dict(orient='records'),
         'negative_reviews_advice': negative_reviews_advice,
-        'reviews_count': [int(positive_reviews_count), int(negative_reviews_count), int(normal_reviews_count)],
+        'reviews_count': [int(reviews_count[0]), int(reviews_count[1]), int(reviews_count[2])],
     }
 
     json_res = jsonify(res)
