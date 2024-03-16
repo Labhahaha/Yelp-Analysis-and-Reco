@@ -1,18 +1,19 @@
 import pandas as pd
 from sqlalchemy import text
-from ..DataAnalyse.SQLSession import get_session, toDataFrame
+from ..DataAnalyse.SQLSession import get_session
 from surprise import Dataset, dump
 from surprise import Reader
-from surprise import SVD
+from surprise import SVD,SVDpp
 from surprise.model_selection import train_test_split
 
 '''
-根据用户历史消费和点评记录，实现基于矩阵分解的协同过滤推荐算法
+根据用户历史消费和点评记录，实现基于矩阵分解和隐式反馈信息的协同过滤推荐算法
 '''
 
 # 模型地址和加载
 model_path = 'config/model/filter_model.pkl'
-model = dump.load(model_path)[1]
+model_pp_path = 'config/model/filter_model+.pkl'
+model = dump.load(model_pp_path)[1]
 # 数据归一化
 reader = Reader(rating_scale=(1, 5))
 
@@ -28,12 +29,12 @@ def model_train():
     # 训练集和测试集分割
     trainset, testset = train_test_split(data, test_size=0.05)
     # 定义矩阵分解模型
-    model = SVD()
+    model = SVDpp()
     # 训练模型
     model.fit(trainset)
     print('模型训练完成')
     # 保存模型
-    dump.dump(model_path, algo=model)
+    dump.dump(model_pp_path, algo=model)
 
 
 def model_test():

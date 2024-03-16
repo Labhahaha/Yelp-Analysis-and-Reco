@@ -50,28 +50,28 @@ def get_recommendations(p_query=None):
 
     # 基于查询的推荐
     if query is not None and query != '':
-        query_candidate_set = get_query_based_candidate_set(query, business_df, 72)
+        query_candidate_set = get_query_based_candidate_set(query, business_df, 120)
     else:
         query_candidate_set = None
 
     # 基于协同过滤的推荐
     if user_id is not None:
-        collaborative_candidate_set = get_collaborative_filtering_candidate_set(user_id, business_df, 72)
+        collaborative_candidate_set = get_collaborative_filtering_candidate_set(user_id, business_df, 120)
     else:
         collaborative_candidate_set = None
 
     # 基于用户位置的推荐
     if user_location is not None:
-        location_candidate_set = get_location_based_candidate_set(user_location, business_df, 72)
+        location_candidate_set = get_location_based_candidate_set(user_location, business_df, 120)
     else:
         location_candidate_set = None
 
     # 基于评价和单量的候选集的推荐
-    alternate_candidate_set = get_alternate_set(business_df, 72)
+    alternate_candidate_set = get_alternate_set(business_df, 120)
 
     # 候选集融合和过滤
     fused_candidate = fuse_candidate_set(collaborative_candidate_set, location_candidate_set, query_candidate_set,
-                                         alternate_candidate_set, 72)
+                                         alternate_candidate_set, 120)
 
     # 候选集重排序得到推荐集
     recommend_list = re_sort(fused_candidate)
