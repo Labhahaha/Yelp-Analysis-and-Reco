@@ -49,7 +49,7 @@ def get_recommendations(p_query=None):
         review_df = get_review_by_business(tuple(business_df['business_id'].values))
 
     # 基于查询的推荐
-    if query is not None:
+    if query is not None and query != '':
         query_candidate_set = get_query_based_candidate_set(query, business_df, 72)
     else:
         query_candidate_set = None

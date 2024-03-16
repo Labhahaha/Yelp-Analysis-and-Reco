@@ -16,12 +16,8 @@ def search():
     filter_type = request.args.get('filter_type')
     filter_condition = request.args.get("filter_condition")
 
-    # 若无查询文本则返回缺失参数
-    if query is None:
-        return jsonify({"error": "Missing query parameter"}), 400
-
     # 调用推荐算法，实现基于搜索的推荐
-    recommend_df = pd.read_json(get_recommendations(query),orient='records')
+    recommend_df = pd.read_json(get_recommendations(),orient='records')
 
     # 根据条件进行排序
     if sort is not None:
