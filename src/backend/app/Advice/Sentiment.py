@@ -35,7 +35,7 @@ def sentiment_predict(texts):
         predicted_probability = torch.max(probability, dim=1).values
         predicted_class = predicted_class
         # 根据预测置信度确定中性情感
-        predicted_class[predicted_probability < 0.6] = 2
+        predicted_class[predicted_probability < 0.7] = 2
     # 返回结果dataframe
     result_df = pd.DataFrame({
         'text': texts,
