@@ -15,7 +15,7 @@
 
 这是yelp点评数据分析与推荐项目的后端仓库，是集成了大数据分析及可视化，以及大数据应用开发的WebApp应用.
 
-后端仓库请移步[Yelp-Analysis-and-Reco](https://github.com/Labhahaha/Yelp-Analysis-and-Reco).
+前端仓库请移步[Yelp-Analysis-and-Reco_frontend](https://github.com/electronic-pig/Yelp-Analysis-and-Reco_frontend)
 
 # 🎉 特性
 
@@ -40,9 +40,9 @@
 
 # 🛠 技术栈
 
-- vite + vue3(选项式API)
-- Element Plus
-- Apache Echarts
+- Flask
+- Scikit-learn + Scikit-suprise
+- Pytorch
 
 <a title="vue" href="https://cn.vuejs.org/" target="_blank">
     <img height="64px" src="https://github.com/electronic-pig/Yelp-Analysis-and-Reco_frontend/assets/103497254/5d6e1a71-1ac2-4043-866b-17ae33afadfd"/>
