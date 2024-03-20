@@ -3,9 +3,10 @@
         <img src="https://github.com/electronic-pig/Yelp-Analysis-and-Reco_frontend/assets/103497254/c430bbf2-fa74-4235-b078-0f4b7b571353" alt="logo" width="500" />
     </p>
     
-![GitHub License](https://img.shields.io/github/license/electronic-pig/Yelp-Analysis-and-Reco_frontend)
+![GitHub License](https://img.shields.io/github/license/Labhahaha/Yelp-Analysis-and-Reco)
 ![Static Badge](https://img.shields.io/badge/contributors-4-lightblue)
-![GitHub Repo stars](https://img.shields.io/github/stars/electronic-pig/Yelp-Analysis-and-Reco_frontend)
+![node.js version](https://img.shields.io/badge/python-3.7-orange.svg)
+![GitHub Repo stars](https://img.shields.io/github/stars/Labhahaha/Yelp-Analysis-and-Reco)
 
 <h2 align="center">Yelp-Analysis-and-Reco</h2>
 </div>
@@ -49,7 +50,7 @@
     <img height="100px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/56c66fc1-0491-4eae-bad5-4c08115c4776"/>
 </a>
 <a title="scikit-learn" href="https://scikit-learn.org/stable/index.html">
-    <img height="100px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/18254205-d00a-4f99-aa85-5e3d1dfbf1ab"/>
+    <img height="80px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/18254205-d00a-4f99-aa85-5e3d1dfbf1ab"/>
 </a>
 
 
@@ -79,7 +80,7 @@ python run.py
 > 
 > 若项目的前后端运行在同一局域网下的不同设备上，请务必关闭设备的防火墙(踩过的坑😂)
 
-# 💻 算法模型
+# 🧰 算法模型
 > 点评推荐
 <img height="500px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/cba2e3e8-8ead-490c-9cff-5f86aa8dd834"/>
 
