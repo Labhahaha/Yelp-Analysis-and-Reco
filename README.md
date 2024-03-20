@@ -59,7 +59,7 @@
 
 ## 安装依赖
 ```sh
-pip intsall requriement.txt
+pip intsall requirements.txt
 ```
 > [!NOTE]
 > torch版本请确保与设备显卡的CUDA版本匹配
