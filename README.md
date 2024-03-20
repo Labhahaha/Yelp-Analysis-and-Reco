@@ -40,31 +40,25 @@
 # 🛠 技术栈
 
 - Flask
-- Scikit-learn + Scikit-suprise
 - Pytorch
-
+- Scikit-learn + Scikit-suprise
+<a title="flask" href="https://flask.palletsprojects.com/">
+    <img height="100px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/3cd27a4b-7268-401a-afc9-ea9a118caa31"/>
+</a>
 <a title="pytorch" href="https://pytorch.org">
-    <img height="64px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/56c66fc1-0491-4eae-bad5-4c08115c4776"/>
+    <img height="100px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/56c66fc1-0491-4eae-bad5-4c08115c4776"/>
 </a>
 <a title="scikit-learn" href="https://scikit-learn.org/stable/index.html">
-    <img height="64px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/18254205-d00a-4f99-aa85-5e3d1dfbf1ab"/>
+    <img height="100px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/18254205-d00a-4f99-aa85-5e3d1dfbf1ab"/>
 </a>
-<a title="flask" href="https://flask.palletsprojects.com/">
-    <img height="64px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/3cd27a4b-7268-401a-afc9-ea9a118caa31"/>
-</a>
+
 
 
 # 🚀 项目运行说明
 
-在执行后续步骤之前，请确保您配置好了以下环境：
-
-- nodejs ≥ 18.19.1
-
-然后在项目根目录执行以下步骤：
-
 ## 安装依赖
 ```sh
-npm install
+pip intsall requriement.txt
 ```
 
 ## 编译运行
