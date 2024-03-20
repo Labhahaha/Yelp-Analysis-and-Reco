@@ -99,8 +99,8 @@ def recommend_friends():
     user_id = Recommend.user_id
     # 归一化、主成分分析和kmeans
     scaler = StandardScaler()
-    pca = load(f'config/model/pca10.joblib')
-    kmeans = load(f'config/model/kmeans_model{k}.joblib')
+    pca = load(f'config/model/PCA/pca10.joblib')
+    kmeans = load(f'config/model/K-means/kmeans_model{k}.joblib')
 
     # 模型预测需要输入的特征参数
     features_column = ['user_friends_count', 'user_average_stars', 'user_review_count', 'user_useful', 'user_funny',

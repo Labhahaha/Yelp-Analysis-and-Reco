@@ -68,13 +68,13 @@ def userClassification():
     pca = PCA(n_components=10, random_state=42)  # 指定降维后的维度
     pca.fit(df[features])
     pca_feature = pca.transform(df[features])
-    dump(pca, f'pca10.joblib')
+    dump(pca, f'config/model/PCA/pca10.joblib')
     # 对不同的k值训练模型
     for k in [10, 15, 25, 30, 35, 40, 45, 50, 100]:
         print(f"开始训练模型：k={k}")
         kmeans = KMeans(n_clusters=k, init='k-means++', max_iter=300, n_init=10, random_state=42)
         kmeans.fit(pca_feature)
-        dump(kmeans, f'D:/2024shixun/ProjectCode/Yelp-Analysis-and-Reco/src/backend/config/model/kmeans_model{k}.joblib')
+        dump(kmeans, f'config/model/K-means/kmeans_model{k}.joblib')
 
         # 随机取样10000个
         sampled_indices = np.random.choice(pca_feature.shape[0], 10000, replace=False)

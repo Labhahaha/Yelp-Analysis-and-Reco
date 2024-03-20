@@ -11,8 +11,8 @@ from surprise.model_selection import train_test_split
 '''
 
 # 模型地址和加载
-model_path = 'config/model/filter_model.pkl'
-model_pp_path = 'config/model/filter_model+.pkl'
+model_path = 'config/model/SVD/filter_model.pkl'
+model_pp_path = 'config/model/SVD++/filter_model+.pkl'
 model = dump.load(model_pp_path)[1]
 # 数据归一化
 reader = Reader(rating_scale=(1, 5))
