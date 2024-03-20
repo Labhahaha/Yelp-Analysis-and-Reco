@@ -72,7 +72,18 @@ python run.py
 
 > [!NOTE]
 > 本项目部分模型使用了深度学习模型，无GPU的设备可能运行缓慢
+> 
 > 若项目的前后端运行在同一局域网下的不同设备上，请务必关闭设备的防火墙(踩过的坑😂)
+
+# 💻 算法模型
+> 点评推荐
+<img height="500px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/cba2e3e8-8ead-490c-9cff-5f86aa8dd834"/>
+
+> 好友推荐
+<img height="500px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/a2c4685b-af69-46ac-86c4-0e8fda7ca53d"/>
+
+> 经营建议
+<img height="500px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/22625d5f-555d-4eea-949b-f125e4e98d1c"/>
 
 # 💻 运行截图
 > 项目首页
