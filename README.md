@@ -5,7 +5,7 @@
     
 ![GitHub License](https://img.shields.io/github/license/Labhahaha/Yelp-Analysis-and-Reco)
 ![Static Badge](https://img.shields.io/badge/contributors-4-lightblue)
-![node.js version](https://img.shields.io/badge/python-3.7-orange.svg)
+![python version](https://img.shields.io/badge/python-3.7-orange.svg)
 ![GitHub Repo stars](https://img.shields.io/github/stars/Labhahaha/Yelp-Analysis-and-Reco)
 
 <h2 align="center">Yelp-Analysis-and-Reco</h2>
