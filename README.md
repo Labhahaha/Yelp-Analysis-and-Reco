@@ -61,19 +61,11 @@
 pip intsall requriement.txt
 ```
 
-## 编译运行
-- 在`main.js`中填写你的BaiduMap_api_key
-- 在`.env.development`中填写你的后端服务地址
-```sh
-npm run dev
-```
+## 项目设置
+- 在config/config.py 中填写你的数据库服务器地址和端口号
 
-## 打包部署(可选)
-- 在`.env.production`中填写你的后端服务地址
-```sh
-npm run build
-```
 > [!NOTE]
+> 本项目部分模型使用了深度学习模型，无GPU的设备可能运行缓慢
 > 若项目的前后端运行在同一局域网下的不同设备上，请务必关闭设备的防火墙(踩过的坑😂)
 
 # 💻 运行截图
