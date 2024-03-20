@@ -43,14 +43,14 @@
 - Scikit-learn + Scikit-suprise
 - Pytorch
 
-<a title="vue" href="https://cn.vuejs.org/" target="_blank">
-    <img height="64px" src="https://github.com/electronic-pig/Yelp-Analysis-and-Reco_frontend/assets/103497254/5d6e1a71-1ac2-4043-866b-17ae33afadfd"/>
+<a title="pytorch" href="https://pytorch.org">
+    <img height="64px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/56c66fc1-0491-4eae-bad5-4c08115c4776"/>
 </a>
-<a title="element-plus" href="https://element-plus.org/zh-CN/" target="_blank">
-    <img height="64px" src="https://github.com/electronic-pig/Yelp-Analysis-and-Reco_frontend/assets/103497254/795c9710-e667-49b8-8514-2cc6663b3f8c"/>
+<a title="scikit-learn" href="https://scikit-learn.org/stable/index.html">
+    <img height="64px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/18254205-d00a-4f99-aa85-5e3d1dfbf1ab"/>
 </a>
-<a title="echarts" href="https://echarts.apache.org/zh/index.html" target="_blank">
-    <img height="64px" src="https://github.com/electronic-pig/Yelp-Analysis-and-Reco_frontend/assets/103497254/0106ecb9-df25-4f3c-a27e-d763a75b14af"/>
+<a title="flask" href="https://flask.palletsprojects.com/">
+    <img height="64px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/3cd27a4b-7268-401a-afc9-ea9a118caa31"/>
 </a>
 
 
