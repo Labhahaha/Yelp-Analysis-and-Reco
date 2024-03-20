@@ -60,10 +60,14 @@
 ```sh
 pip intsall requriement.txt
 ```
+> [!NOTE]
+> torch版本请确保与设备显卡的CUDA版本匹配
 
 ## 项目设置
 - 在config/config.py 中填写你的数据库服务器地址和端口号
 - 在config/model 中放置你的模型权重文件
+> [!NOTE]
+> 数据库文件和预训练模型权重可提issue从开发者处获取
 
 ## 项目运行
 ```sh
