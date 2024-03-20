@@ -8,4 +8,5 @@ scikit-surprise==1.1.1
 scikit-learn==1.0.2
 transformers==4.30.2
 matplotlib==3.5.3
+nltk==3.8.1
 torch
