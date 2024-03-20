@@ -63,6 +63,12 @@ pip intsall requriement.txt
 
 ## 项目设置
 - 在config/config.py 中填写你的数据库服务器地址和端口号
+- 在config/model 中放置你的模型权重文件
+
+## 项目运行
+```sh
+python run.py
+```
 
 > [!NOTE]
 > 本项目部分模型使用了深度学习模型，无GPU的设备可能运行缓慢
