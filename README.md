@@ -40,18 +40,9 @@
 
 # 🛠 技术栈
 
-- Flask
-- Pytorch
-- Scikit-learn + Scikit-suprise
-<a title="flask" href="https://flask.palletsprojects.com/">
-    <img height="100px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/3cd27a4b-7268-401a-afc9-ea9a118caa31"/>
-</a>
-<a title="pytorch" href="https://pytorch.org">
-    <img height="100px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/56c66fc1-0491-4eae-bad5-4c08115c4776"/>
-</a>
-<a title="scikit-learn" href="https://scikit-learn.org/stable/index.html">
-    <img height="80px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/18254205-d00a-4f99-aa85-5e3d1dfbf1ab"/>
-</a>
+| [Flask](https://flask.palletsprojects.com/) | [PyTorch](https://pytorch.org) | [Scikit-learn](https://scikit-learn.org/stable/index.html) | [Scikit-surprise](https://surpriselib.com/) |
+|:---:|:---:|:---:|:---:|
+| [<img src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/3cd27a4b-7268-401a-afc9-ea9a118caa31" alt="flask" height="100px"/>](https://flask.palletsprojects.com/) | [<img src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/56c66fc1-0491-4eae-bad5-4c08115c4776" alt="pytorch" height="100px"/>](https://pytorch.org) | [<img src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/18254205-d00a-4f99-aa85-5e3d1dfbf1ab" alt="scikit-learn" height="80px"/>](https://scikit-learn.org/stable/index.html) | [<img src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/f9fa440c-871b-4e58-b253-50239cb8cf03" alt="scikit-surprise" height="50px"/>](https://surpriselib.com/) |
 
 
 
