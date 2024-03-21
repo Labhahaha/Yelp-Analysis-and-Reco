@@ -6,7 +6,7 @@ from  ..DataAnalyse.SQLSession import toJSON,get_session,toDataFrame
 from ..Advice import Advice
 from .Sentiment import analyze_reviews_for_business
 from threading import Thread
-
+from ...config import config
 
 boards_blue = Blueprint('boards', __name__)
 
@@ -99,8 +99,7 @@ def get_review_by_business(business_id):
 
 
 def get_api_response(text):
-    access_token = "24.f4f83135009e271e1305896aea8fc217.2592000.1713149522.282335-56631651"
-    # access_token = get_access_token()
+    access_token = config.API_TOKEN
     url = "https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/completions?access_token=" + access_token
 
     payload = json.dumps({

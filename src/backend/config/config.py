@@ -3,3 +3,5 @@
 DATABASE_URL = f'mysql+pymysql://root:123456@localhost:3306/yelp'
 TRACK_MODIFICATIONS = False
 
+# 替换为你的文心一言API_TOKEN
+API_TOKEN = ""

@@ -20,7 +20,7 @@ def sentiment_predict(texts):
         # 初始化情感分类模型
         sentiment = Sentiment(bert_model, 2)
         # 加载权重
-        sentiment.load_state_dict(torch.load('config/model/Sentiment/sentiment.pt',map_location=device))
+        sentiment.load_state_dict(torch.load('config/model/Sentiment/sentiment.pt', map_location=device))
         # 移动到CUDA
         sentiment.to(device)
     # 输入句子编码

@@ -6,20 +6,6 @@ from .Sentiment import analyze_reviews_for_business
 reviews_count = None
 advice_blue = Blueprint('advice', __name__)
 
-# def get_access_token():
-#     url = "https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=4qY7CsNN4WsWWfMAj45dCZV4&client_secret=8yziqhq6wQUo5VcGKo1bRxl0jXhvxiMe"
-#
-#     payload = json.dumps("")
-#     headers = {
-#         'Content-Type': 'application/json',
-#         'Accept': 'application/json'
-#     }
-#
-#     response = requests.request("POST", url, headers=headers, data=payload)
-#     print(response.json().get("access_token"))
-#
-#     return response.json().get("access_token")
-
 def get_top_five_businesses(business_df):
     # 根据综合评分降序排序，并取前五个商家
     top_five_businesses_df = business_df.nlargest(5, 'weighted_score')
