@@ -96,6 +96,7 @@ def checkin_count_by_year():
         json_res = toJSON(res)
         return json_res
 
+
 # 统计出每年的综合数据
 @users_blue.route('/info_by_year')
 def info_by_year():

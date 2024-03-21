@@ -1,9 +1,10 @@
 import pandas as pd
-from torch import nn
 import torch
+from torch import nn
 from transformers import DistilBertModel
-from ..Recommendation.QueryBased import model_init, device
+
 from ..Recommendation import QueryBased
+from ..Recommendation.QueryBased import model_init, device
 
 sentiment = None
 
@@ -85,15 +86,11 @@ def analyze_reviews_for_business(reviews_df):
 #         sentiment.cls_head.load_state_dict(torch.load("config/model/sentiment.pt"))
 #         sentiment.cls_head.to(device)
 #
-#     encoded_batch = QueryBased.tokenizer.batch_encode_plus(texts, add_special_tokens=True, return_tensors='pt', padding=True, truncation=True).to(device)
-#     with torch.no_grad():
-#         predictions = sentiment(encoded_batch)
-#         probability = torch.softmax(predictions, dim=1)
-#         predicted_class = predictions.argmax(dim=1)
-#         predicted_probability = torch.max(probability , dim=1).values
-#     print(predicted_class)
-#     print(predicted_probability)
-#     return predicted_class, predicted_probability
+# encoded_batch = QueryBased.tokenizer.batch_encode_plus(texts, add_special_tokens=True, return_tensors='pt',
+#   padding=True, truncation=True).to(device) with torch.no_grad(): predictions = sentiment(encoded_batch) probability
+#   = torch.softmax(predictions, dim=1) predicted_class = predictions.argmax(dim=1) predicted_probability = torch.max(
+#   probability , dim=1).values print(predicted_class) print(predicted_probability) return predicted_class,
+#   predicted_probability
 #
 #
 # class Sentiment(nn.Module):
