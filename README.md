@@ -57,7 +57,7 @@ pip intsall -r requirements.txt
 
 ## 项目设置
 - 在config/config.py 中填写你的数据库服务器地址和端口号
-- 在config/config.py 中填写你的文心一言API_TOKEN
+- 在APP/Advice/Boards.py 中填写你的文心一言API_TOKEN
 - 在config/model 中放置你的模型权重文件
 > [!NOTE]
 > 数据库文件和预训练模型权重可通过Issue从开发者处获取
