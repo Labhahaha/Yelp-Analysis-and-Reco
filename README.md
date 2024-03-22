@@ -4,7 +4,7 @@
     </p>
     
 ![GitHub License](https://img.shields.io/github/license/Labhahaha/Yelp-Analysis-and-Reco)
-![Static Badge](https://img.shields.io/badge/contributors-4-lightblue)
+![Static Badge](https://img.shields.io/badge/collaborator-4-lightblue)
 ![python version](https://img.shields.io/badge/python-3.7-orange.svg)
 ![GitHub Repo stars](https://img.shields.io/github/stars/Labhahaha/Yelp-Analysis-and-Reco)
 
@@ -13,9 +13,9 @@
 
 # ✨ 简介
 
-这是yelp点评数据分析与推荐项目的后端仓库，是集成了大数据分析及可视化，以及大数据应用开发的WebApp应用.
+这是yelp点评数据分析与推荐项目的后端仓库，是集成了协同过滤推荐算法、搜索算法和NLP情感分析算法的flask后端应用.
 
-前端仓库请移步[Yelp-Analysis-and-Reco_frontend](https://github.com/electronic-pig/Yelp-Analysis-and-Reco_frontend)
+前端仓库请移步[Yelp-Analysis-and-Reco_frontend](https://github.com/electronic-pig/Yelp-Analysis-and-Reco_frontend)．
 
 # 🎉 特性
 
@@ -50,22 +50,32 @@
 
 ## 安装依赖
 ```sh
-pip intsall -r requirements.txt
+pip install -r requirements.txt
 ```
 > [!NOTE]
 > torch版本请确保与设备显卡的CUDA版本匹配
 
 ## 项目设置
-- 在config/config.py 中填写你的数据库服务器地址和端口号
-- 在APP/Advice/Boards.py 中填写你的文心一言API_TOKEN
-- 在config/model 中放置你的模型权重文件
+- 在`config/config.py`中填写你的数据库服务器地址和端口号
+- 在`app/Advice/Boards.py`中填写你的文心一言API_TOKEN
+- 在`config/model`中放置你的模型权重文件
 > [!NOTE]
-> 数据库文件和预训练模型权重可通过Issue从开发者处获取
+> 本项目的数据库是在[yelp开源数据库](https://www.yelp.com/dataset)的基础上进行了一些数据处理和筛选，新增了许多新的数据表
+> 
+> 项目所使用的数据库和预训练模型权重可通过Issue从开发者处获取，当然您也可以根据项目自行处理和训练
 
 ## 项目运行
 ```sh
 python run.py
 ```
+> [!Warning]
+> 如遇项目报错`Resource averaged_perceptron_tagger not found.`,表示`averaged_perceptron_tagger`资源尚未下载到你的机器上
+> 
+> 在python控制台执行以下代码即可
+> ```sh
+> import nltk
+> nltk.download('averaged_perceptron_tagger')
+> ```
 
 > [!NOTE]
 > 本项目部分模型使用了深度学习模型，无GPU的设备可能运行缓慢
@@ -75,6 +85,7 @@ python run.py
 ## 图片服务
 - 本项目使用微软的IIS服务搭建图片服务器，向前端提供图片传输支持
 - 即通过IIS服务共享图片，前端可通过HTTP协议直接获取图片数据
+- Windows10启动IIS服务器的教程详见[利用windows服务器自带的IIS搭建网站并发布公网访问【内网穿透】](https://developer.aliyun.com/article/1448368)
 > [!NOTE]
 > 图片数据集来自[Yelp Open Dataset](https://www.yelp.com/dataset)
 > 
@@ -95,7 +106,7 @@ python run.py
 # 💻 运行截图
 > 项目首页
 
-![首页](https://github.com/electronic-pig/Yelp-Analysis-and-Reco_frontend/assets/103497254/28c9ad69-ae7c-49ce-b4da-c761a6a77218)
+![首页](https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/103497254/87f05c3c-fd15-45ec-95d6-5571ac297ee3)
 
 > [!NOTE]
 > 用户端唯一指定用户名`Shari`，密码任意；商家端唯一指定用户名`asdf`，密码任意
@@ -125,25 +136,27 @@ python run.py
 
 > 商户详情&评论情感分析
 
-![商家详情](https://github.com/electronic-pig/Yelp-Analysis-and-Reco_frontend/assets/103497254/0fd859cc-039c-4ee6-a641-05644e821f80)
+![商家详情](https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/103497254/4765b133-6328-4446-912b-fc27b015deb2)
 
-> 用户端推荐、搜索
+> 用户端推荐
 
 <table>
     <tr>
         <td align="center">商户推荐</td>
-        <td align="center">用户搜索</td>
         <td align="center">好友推荐</td>
     </tr>
     <tr>
         <td><img src="https://github.com/electronic-pig/Yelp-Analysis-and-Reco_frontend/assets/103497254/629e1db3-7b61-4c5d-bd63-ce429684f6dc"></td>
-        <td><img src="https://github.com/electronic-pig/Yelp-Analysis-and-Reco_frontend/assets/103497254/285b83a8-3f9d-4724-bfbf-9b64804835c6"></td>
-        <td><img src="https://github.com/electronic-pig/Yelp-Analysis-and-Reco_frontend/assets/103497254/ad97e875-6336-43f5-8c35-538ffe74e29f"></td>
+         <td><img src="https://github.com/electronic-pig/Yelp-Analysis-and-Reco_frontend/assets/103497254/ad97e875-6336-43f5-8c35-538ffe74e29f"></td>
     </tr>
 </table>
 
 > [!Important]
 > 由于yelp官方开源[数据集](https://www.yelp.com/dataset)中商户数据与图片数据并不完全对应，因此商户卡片的图像为随机选取
+
+> 搜索与筛选
+
+![搜索与筛选](https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/103497254/bd68aa4f-2018-4d8c-a038-a559df1b1b07)
 
 > 商家端
 
@@ -162,4 +175,4 @@ python run.py
 本项目由以下四位开发者共同完成(排名不分先后)：[electronic-pig](https://github.com/electronic-pig)、[Labhahaha](https://github.com/Labhahaha)、[zf666fz](https://github.com/zf666fz)、[weeadd](https://github.com/weeadd)
 
 # 📄 写在最后
-项目制作不易，如果它对你有帮助的话，请务必给作者点一个免费的⭐，万分感谢!🙏
+项目制作不易，如果它对你有帮助的话，请务必给作者点一个免费的⭐，万分感谢!🙏🙏🙏
