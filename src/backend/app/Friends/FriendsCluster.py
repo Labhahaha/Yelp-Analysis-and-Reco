@@ -1,18 +1,20 @@
+import random
+from contextlib import contextmanager
+from datetime import datetime
+
 import joblib
 import numpy as np
-from matplotlib import pyplot as plt
-from sklearn.manifold import TSNE
-from sqlalchemy import text
-from sklearn.cluster import KMeans
-from sklearn.preprocessing import StandardScaler
 import pandas as pd
-from datetime import datetime
 from joblib import dump
-import random
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from matplotlib import pyplot as plt
+from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
-from contextlib import contextmanager
+from sklearn.manifold import TSNE
+from sklearn.preprocessing import StandardScaler
+from sqlalchemy import create_engine
+from sqlalchemy import text
+from sqlalchemy.orm import sessionmaker
+
 engine = None
 Session = None
 
@@ -144,9 +146,3 @@ def accuraciesTestRun():
     # 找到准确率最高的模型
     best_k = max(accuracy_results, key=accuracy_results.get)
     print(f'k={best_k}准确率最高，准确率为{accuracy_results[best_k]}')
-
-
-
-
-
-

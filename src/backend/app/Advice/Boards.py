@@ -1,14 +1,17 @@
-from flask import request, Blueprint, jsonify
-import requests,json
-from sqlalchemy import text
-from ..Recommendation.Recommend import get_business_by_city
-from  ..DataAnalyse.SQLSession import toJSON,get_session,toDataFrame
-from ..Advice import Advice
-from .Sentiment import analyze_reviews_for_business
 from threading import Thread
+
+import json
+import requests
+from flask import Blueprint, jsonify
+from sqlalchemy import text
+
+from .Sentiment import analyze_reviews_for_business
+from ..Advice import Advice
+from ..DataAnalyse.SQLSession import get_session, toDataFrame
+from ..Recommendation.Recommend import get_business_by_city
+
 # 替换为你的文心一言API_TOKEN
 API_TOKEN = ""
-
 
 boards_blue = Blueprint('boards', __name__)
 
@@ -28,6 +31,7 @@ def extract_category(categories):
     # 如果列表中没有包含 'Restaurants' 的类别，则返回 None
     return None
 
+
 def get_business_category(business_id):
     with get_session() as session:
         query = text("SELECT categories FROM business WHERE business_id = :business_id")
@@ -37,6 +41,7 @@ def get_business_category(business_id):
         # 提取类别信息
         category = extract_category(categories)
         return category
+
 
 def get_similar_high_rated_businesses(business_id, threshold=4.5):
     category = get_business_category(business_id)
@@ -53,8 +58,9 @@ def get_similar_high_rated_businesses(business_id, threshold=4.5):
         res = toDataFrame(res)
         return res
 
+
 # 获取当前商家在当前类别中的排名
-def get_business_rank_in_category(business_id,business_df):
+def get_business_rank_in_category(business_id, business_df):
     # 获取当前商家的类别
     category = get_business_category(business_id)
 
@@ -69,7 +75,7 @@ def get_business_rank_in_category(business_id,business_df):
 
     # 计算综合评分，星级占70%，评论数量占30%
     normalized_review_count = (category_businesses['review_count'] - category_businesses['review_count'].min()) / (
-                category_businesses['review_count'].max() - category_businesses['review_count'].min())
+            category_businesses['review_count'].max() - category_businesses['review_count'].min())
     category_businesses['weighted_score'] = 0.7 * category_businesses[
         'normalized_stars'] + 0.3 * normalized_review_count
     category_businesses = category_businesses.sort_values(by='weighted_score', ascending=False)
@@ -84,12 +90,15 @@ def get_business_rank_in_category(business_id,business_df):
 
     return business_rank
 
+
 def analyze_star_count(business_id):
     with get_session() as session:
-        query = text("select rev_stars, COUNT(*) as count from review WHERE rev_business_id = :business_id GROUP BY rev_stars")
+        query = text(
+            "select rev_stars, COUNT(*) as count from review WHERE rev_business_id = :business_id GROUP BY rev_stars")
         res = session.execute(query, {"business_id": business_id})
         res = toDataFrame(res)
     return res
+
 
 # 获取特定business_id下的所有评论文本
 def get_review_by_business(business_id):
@@ -124,6 +133,7 @@ def get_api_response(text):
 
     return response_text
 
+
 def analyze_negative_reviews(review_df):
     # 筛选出 rev_stars 为 1 的评论
     negative_reviews = review_df[(review_df['rev_stars'] == 1)]
@@ -152,7 +162,7 @@ def get_board():
 
     Advice.review_df = review_df
     star_count = analyze_star_count(business_id)
-    business_rank = get_business_rank_in_category(business_id,business_df)
+    business_rank = get_business_rank_in_category(business_id, business_df)
     Advice.reviews_count = analyze_reviews_for_business(review_df)
 
     res = {
@@ -160,9 +170,8 @@ def get_board():
         'reviews': review_df.to_dict(orient='records'),
         'star_count': star_count.to_dict(orient='records'),
         'business_rank': int(business_rank),
-        'positive_reviews_count':int(Advice.reviews_count[0])
+        'positive_reviews_count': int(Advice.reviews_count[0])
     }
 
     json_res = jsonify(res)
     return json_res
-

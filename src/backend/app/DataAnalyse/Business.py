@@ -1,6 +1,4 @@
-import json
-
-from flask import Blueprint, jsonify
+from flask import Blueprint
 from sqlalchemy import text
 
 from .SQLSession import get_session, toJSON
@@ -117,6 +115,7 @@ def different_types_restaurant_stars():
         res = session.execute(query)
         json_res = toJSON(res)
         return json_res
+
 
 # 统计不同类型的餐厅的各项数据合并
 @business_blue.route('/different_types_restaurant')

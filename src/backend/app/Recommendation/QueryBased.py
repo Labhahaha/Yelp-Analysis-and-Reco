@@ -1,6 +1,6 @@
 import pandas as pd
-from transformers import DistilBertTokenizer, DistilBertModel
 import torch
+from transformers import DistilBertTokenizer, DistilBertModel
 
 '''
 使用语言模型bert，实现文本语义相似度匹配，使用搜索功能

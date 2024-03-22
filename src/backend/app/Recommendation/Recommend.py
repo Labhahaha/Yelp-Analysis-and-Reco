@@ -186,7 +186,8 @@ def add_info(fused_candidate, business_df):
     res = pd.merge(fused_candidate, business_df, how='left', on='business_id')
     # 如果有用户位置则额外计算距离
     if user_location is not None:
-        res['distance'] = res.apply(lambda row: cal_distance(user_location, [row['longitude'], row['latitude']]),axis=1)
+        res['distance'] = res.apply(lambda row: cal_distance(user_location, [row['longitude'], row['latitude']]),
+                                    axis=1)
     return res
 
 

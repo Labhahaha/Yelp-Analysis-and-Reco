@@ -1,12 +1,14 @@
 import random
-from flask import Blueprint, jsonify, json
+
+from flask import Blueprint, json
 from flask import request
+from joblib import load
 from scipy.spatial.distance import euclidean
 from sklearn.preprocessing import StandardScaler
 from sqlalchemy import text
+
 from ..DataAnalyse.SQLSession import get_session, toDataFrame
 from ..Recommendation import Recommend
-from joblib import load
 
 friends_blue = Blueprint('friends', __name__)
 
@@ -18,7 +20,7 @@ def get_friends_of_friends(user_id):
         query = text(f"SELECT user_friends From users WHERE user_id = '{user_id}'")
         df = session.execute(query)
         df = toDataFrame(df)
-        if df['user_friends'][0]=='None':return []
+        if df['user_friends'][0] == 'None': return []
 
     friend_ids = tuple(df['user_friends'][0].split(', '))
 
@@ -69,7 +71,7 @@ def find_candidate_set(user_id):
     friends_of_friends_ids = get_friends_of_friends(user_id)
     review_same_business_ids = get_review_same_business(user_id)
     candidate_set_ids = list(set(friends_of_friends_ids) | set(review_same_business_ids))
-    candidate_set_ids = tuple(random.sample(candidate_set_ids, min(1000,len(candidate_set_ids))))
+    candidate_set_ids = tuple(random.sample(candidate_set_ids, min(1000, len(candidate_set_ids))))
     # 得到候选集
     with get_session() as session:
         query = text(f"SELECT * FROM users WHERE user_id in {candidate_set_ids}")
@@ -104,9 +106,11 @@ def recommend_friends():
 
     # 模型预测需要输入的特征参数
     features_column = ['user_friends_count', 'user_average_stars', 'user_review_count', 'user_useful', 'user_funny',
-                       'user_cool', 'user_fans', 'user_compliment_hot', 'user_compliment_more', 'user_compliment_profile',
+                       'user_cool', 'user_fans', 'user_compliment_hot', 'user_compliment_more',
+                       'user_compliment_profile',
                        'user_compliment_cute', 'user_compliment_list', 'user_compliment_note', 'user_compliment_plain',
-                       'user_compliment_cool', 'user_compliment_funny', 'user_compliment_writer', 'user_compliment_photos']
+                       'user_compliment_cool', 'user_compliment_funny', 'user_compliment_writer',
+                       'user_compliment_photos']
 
     # 预测候选集
     candidate_set_df = find_candidate_set(user_id)
@@ -137,12 +141,3 @@ def recommend_friends():
     # 提取距离最近的10个数据点
     nearest_data = candidate_set_df.loc[nearest_list]
     return json.dumps(nearest_data.to_dict(orient='records'))
-
-
-
-
-
-
-
-
-

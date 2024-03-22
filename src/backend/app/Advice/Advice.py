@@ -1,18 +1,18 @@
-from flask import Blueprint, jsonify
 import json
-import requests
-from .Sentiment import analyze_reviews_for_business
+
+from flask import Blueprint, jsonify
 
 reviews_count = None
 advice_blue = Blueprint('advice', __name__)
+
 
 def get_top_five_businesses(business_df):
     # 根据综合评分降序排序，并取前五个商家
     top_five_businesses_df = business_df.nlargest(5, 'weighted_score')
     return top_five_businesses_df
 
-def get_common_attributes(business_df):
 
+def get_common_attributes(business_df):
     # 获取前五商家的DataFrame
     top_five_businesses_df = get_top_five_businesses(business_df)
 
@@ -43,6 +43,7 @@ def get_common_attributes(business_df):
             common_attributes[key] = value
 
     return common_attributes
+
 
 @advice_blue.route('/get_advice')
 def get_advice():

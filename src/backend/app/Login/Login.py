@@ -1,4 +1,5 @@
 from flask import request, Blueprint, jsonify
+
 from ..Recommendation import Recommend
 
 login_blue = Blueprint('login', __name__)

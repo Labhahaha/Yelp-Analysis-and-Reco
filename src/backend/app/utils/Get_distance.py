@@ -5,7 +5,7 @@ from sqlalchemy import text
 from ..DataAnalyse.SQLSession import get_session
 
 
-def cal_distance_fromSQL(user_location,business_id):
+def cal_distance_fromSQL(user_location, business_id):
     user_longitude = user_location[0]
     user_latitude = user_location[1]
 
@@ -21,14 +21,15 @@ def cal_distance_fromSQL(user_location,business_id):
 
     return haversine(user_longitude, user_latitude, business_longitude, business_latitude)
 
-def cal_distance(user_location,business_location):
 
+def cal_distance(user_location, business_location):
     user_longitude = user_location[0]
     user_latitude = user_location[1]
     business_longitude = business_location[0]
     business_latitude = business_location[1]
 
     return haversine(user_longitude, user_latitude, business_longitude, business_latitude)
+
 
 def haversine(lon1, lat1, lon2, lat2):
     lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])

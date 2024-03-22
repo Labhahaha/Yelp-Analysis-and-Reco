@@ -1,11 +1,13 @@
 from flask import Flask
 from flask_cors import CORS
-from .DataAnalyse import business_blue,users_blue,checkin_blue,comprehensive_blue,stars_blue,db_init,review_blue,filter_words
+
+from .DataAnalyse import business_blue, users_blue, checkin_blue, comprehensive_blue, stars_blue, db_init, \
+    review_blue, filter_words
 from .Recommendation import recommend_blue
-from .Search import search_blue
+from .Advice import boards_blue, advice_blue
 from .Friends import friends_blue
 from .Login import login_blue
-from .Advice import boards_blue,advice_blue
+from .Search import search_blue
 
 
 def create_app(config):
@@ -25,8 +27,4 @@ def create_app(config):
     app.register_blueprint(boards_blue, url_prefix='/boards')
     app.register_blueprint(advice_blue, url_prefix='/advice')
 
-
     return app
-
-
-

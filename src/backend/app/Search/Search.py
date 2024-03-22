@@ -1,11 +1,14 @@
-from flask import Blueprint, jsonify, json
-from flask import request
-from .Filter import filter
-from ..Recommendation.Recommend import get_recommendations
-from .Order import sort
 import pandas as pd
+from flask import Blueprint
+from flask import request
+
+from .Filter import filter
+from .Order import sort
+from ..Recommendation.Recommend import get_recommendations
+
 # 创建搜索蓝图
 search_blue = Blueprint('search', __name__, )
+
 
 @search_blue.route('/')
 def search():
@@ -17,7 +20,7 @@ def search():
     distance_condition = request.args.get('distance_condition')
 
     # 调用推荐算法，实现基于搜索的推荐
-    recommend_df = pd.read_json(get_recommendations(),orient='records')
+    recommend_df = pd.read_json(get_recommendations(), orient='records')
 
     # 根据条件进行排序
     if sortBy is not None and sortBy != '':

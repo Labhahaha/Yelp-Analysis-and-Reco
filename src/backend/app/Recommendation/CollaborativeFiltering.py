@@ -1,10 +1,11 @@
 import pandas as pd
 from sqlalchemy import text
-from ..DataAnalyse.SQLSession import get_session
 from surprise import Dataset, dump
 from surprise import Reader
-from surprise import SVD,SVDpp
+from surprise import SVDpp
 from surprise.model_selection import train_test_split
+
+from ..DataAnalyse.SQLSession import get_session
 
 '''
 根据用户历史消费和点评记录，实现基于矩阵分解和隐式反馈信息的协同过滤推荐算法
