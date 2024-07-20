@@ -17,6 +17,8 @@
 
 前端仓库请移步[Yelp-Analysis-and-Reco_frontend](https://github.com/electronic-pig/Yelp-Analysis-and-Reco_frontend)．
 
+An English version of the README for this project: [README-EN.md](./README-EN.md)
+
 # 🎉 特性
 
 ## 数据可视化
