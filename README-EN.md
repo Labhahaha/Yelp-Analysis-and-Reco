@@ -99,11 +99,14 @@ python run.py
 
 # 🧰 Algorithm Models
 
-> Review Recommendations <img height="500px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/cba2e3e8-8ead-490c-9cff-5f86aa8dd834"/>
+> Review Recommendations
+> <img height="500px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/cba2e3e8-8ead-490c-9cff-5f86aa8dd834"/>
 
-> Friend Recommendations <img height="500px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/a2c4685b-af69-46ac-86c4-0e8fda7ca53d"/>
+> Friend Recommendations
+> <img height="500px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/a2c4685b-af69-46ac-86c4-0e8fda7ca53d"/>
 
-> Business Advice <img height="500px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/22625d5f-555d-4eea-949b-f125e4e98d1c"/>
+> Business Advice
+> <img height="500px" src="https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/95296826/22625d5f-555d-4eea-949b-f125e4e98d1c"/>
 
 # 💻 Screenshots
 
@@ -128,10 +131,15 @@ python run.py
 
 > User End Recommendations
 
-<table>     <tr>         <td align="center">Business Recommendations</td>         <td align="center">Friend Recommendations</td>     </tr>     <tr>         <td><img src="https://github.com/electronic-pig/Y
-
-elp-Analysis-and-Reco_frontend/assets/103497254/629e1db3-7b61-4c5d-bd63-ce429684f6dc"></td> <td><img src="https://github.com/electronic-pig/Yelp-Analysis-and-Reco_frontend/assets/103497254/ad97e875-6336-43f5-8c35-538ffe74e29f"></td> </tr>
-
+<table>
+    <tr>
+        <td align="center">Business Recommendations</td>
+        <td align="center">Friend Recommendations</td>
+    </tr>
+    <tr>
+        <td><img src="https://github.com/electronic-pig/Yelp-Analysis-and-Reco_frontend/assets/103497254/629e1db3-7b61-4c5d-bd63-ce429684f6dc"></td>
+         <td><img src="https://github.com/electronic-pig/Yelp-Analysis-and-Reco_frontend/assets/103497254/ad97e875-6336-43f5-8c35-538ffe74e29f"></td>
+    </tr>
 </table>
 
 > [!Important]
