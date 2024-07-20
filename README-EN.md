@@ -32,8 +32,7 @@ For the frontend repository, please visit [Yelp-Analysis-and-Reco_frontend](http
 - Business Operational Recommendations
 - Review Sentiment Analysis
 
-> `[!Warning]`
->
+> [!Warning]
 > The icons and homepage images used in this project are from the [official Yelp website](https://www.yelp.com/). This open-source project is for learning and communication purposes only. Please comply with relevant copyright regulations.
 
 # 🛠 Tech Stack
@@ -50,8 +49,7 @@ For the frontend repository, please visit [Yelp-Analysis-and-Reco_frontend](http
 pip install -r requirements.txt
 ```
 
-> `[!NOTE]`
->
+> [!NOTE]
 > Ensure the PyTorch version matches the CUDA version of your device's GPU.
 
 ## Project Setup
@@ -60,8 +58,7 @@ pip install -r requirements.txt
 - Fill in your API_TOKEN for Baidu Wenxin in `app/Advice/Boards.py`.
 - Place your model weight files in `config/model`.
 
-> `[!NOTE]`
->
+> [!NOTE]
 > The project's database is based on the [Yelp open dataset](https://www.yelp.com/dataset) with additional processing and filtering, and several new tables added.
 >
 > The database and pre-trained model weights used in the project can be obtained from the developers via Issues, or you can process and train them yourself.
@@ -72,8 +69,7 @@ pip install -r requirements.txt
 python run.py
 ```
 
-> `[!Warning]`
->
+> [!Warning]
 > If you encounter the error `Resource averaged_perceptron_tagger not found.`, it means the `averaged_perceptron_tagger` resource has not been downloaded to your machine.
 >
 > Run the following code in the Python console to resolve it:
@@ -83,8 +79,7 @@ python run.py
 > nltk.download('averaged_perceptron_tagger')
 > ```
 
-> `[!NOTE]`
->
+> [!NOTE]
 > Some models used in this project are deep learning models, which may run slowly on devices without a GPU.
 >
 > If the project's frontend and backend are running on different devices in the same local network, make sure to disable the firewall on the devices (lessons learned 😅).
@@ -95,8 +90,7 @@ python run.py
 - By sharing images through the IIS service, the frontend can directly access image data via the HTTP protocol.
 - For a tutorial on setting up an IIS server on Windows 10, refer to [Using Windows Server's Built-in IIS to Set Up a Website and Publish it for Public Access (Intranet Penetration)](https://developer.aliyun.com/article/1448368).
 
-> `[!NOTE]`
->
+> [!NOTE]
 > The image dataset is from the [Yelp Open Dataset](https://www.yelp.com/dataset).
 >
 > You can download it yourself (it may be slow), or obtain it from the developers via Issues.
@@ -117,8 +111,7 @@ python run.py
 
 ![Homepage](https://github.com/Labhahaha/Yelp-Analysis-and-Reco/assets/103497254/87f05c3c-fd15-45ec-95d6-5571ac297ee3)
 
-> `[!NOTE]`
->
+> [!NOTE]
 > The only specified username for the user end is **Shari**, with any password; the only specified username for the business end is **asdf**, with any password.
 >
 > Don't ask why 😅. It's for project demonstration purposes, and the login module is not the focus of this project.
@@ -141,8 +134,7 @@ elp-Analysis-and-Reco_frontend/assets/103497254/629e1db3-7b61-4c5d-bd63-ce429684
 
 </table>
 
-> `[!Important]`
->
+> [!Important]
 >  Because the business data in the Yelp open [dataset](https://www.yelp.com/dataset) does not completely match the image data, the images for the business cards are randomly selected.
 
 > Search and Filter
